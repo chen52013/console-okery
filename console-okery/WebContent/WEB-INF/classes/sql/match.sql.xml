@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="match">
+
+    <select id="queryMatchList" parameterClass="com.yxqm.console.web.bean.MatchBean" resultClass="hashMap">
+        select 
+			m.match_id,
+			m.match_name,
+			m.match_time,
+			m.match_title,
+			m.match_desc,
+			m.push_result,
+			m.match_result,
+			m.is_true,
+			m.match_money,
+			m.match_summary,
+			DATE_FORMAT(m.crt_time,'%Y-%m-%d %H:%i:%S') crt_time,
+	        DATE_FORMAT(m.mod_time,'%Y-%m-%d %H:%i:%S') mod_time
+		from t_match m
+    </select>
+
+    <select id="selectMaxBasketballMatchTime" resultClass="com.yxqm.console.utils.bean.InitMatchBean">
+        select 
+			max(match_time) match_time
+		from t_basketball
+    </select>
+
+    <select id="selectMaxFootballMatchTime" resultClass="com.yxqm.console.utils.bean.InitMatchBean">
+        select 
+			max(match_time) match_time
+		from t_win007match
+    </select>
+
+    <select id="queryOdds" parameterClass="com.yxqm.console.utils.bean.InitOddsItem" resultClass="hashMap">
+        select *
+		from t_win007_keli
+		where 1 = 1
+		<isNotEmpty prepend="and" property="match_id">
+	       	match_id = #match_id#
+	    </isNotEmpty>
+	    <isNotEmpty prepend="and" property="company_id">
+	       	company_id = #company_id#
+	    </isNotEmpty>
+	    <isNotEmpty property="company_name" prepend="and">
+           company_name = #company_name#
+       </isNotEmpty>
+       <isNotEmpty property="win_odd" prepend="and">
+           win_odd = #win_odd#
+       </isNotEmpty>
+       <isNotEmpty property="draw_odd" prepend="and">
+           draw_odd = #draw_odd#
+       </isNotEmpty>
+       <isNotEmpty property="lost_odd" prepend="and">
+           lost_odd = #lost_odd#
+       </isNotEmpty>
+       <isNotEmpty property="win_rate" prepend="and">
+           win_rate = #win_rate#
+       </isNotEmpty>
+       <isNotEmpty property="draw_rate" prepend="and">
+           draw_rate = #draw_rate#
+       </isNotEmpty>
+       <isNotEmpty property="lost_rate" prepend="and">
+           lost_rate = #lost_rate#
+       </isNotEmpty>
+       <isNotEmpty property="return_rate" prepend="and">
+           return_rate = #return_rate#
+       </isNotEmpty>
+       <isNotEmpty property="win_keli" prepend="and">
+           win_keli = #win_keli#
+       </isNotEmpty>
+       <isNotEmpty property="draw_keli" prepend="and">
+           draw_keli = #draw_keli#
+       </isNotEmpty>
+       <isNotEmpty property="lost_keli" prepend="and">
+           lost_keli = #lost_keli#
+       </isNotEmpty>
+	</select>
+
+    <select id="queryMatchListRows" parameterClass="com.yxqm.console.web.bean.MatchBean" resultClass="java.lang.Integer">
+        select 
+	        count(distinct m.match_id)
+        from t_match m 
+    </select>
+
+    <select id="queryFootballMatchListRows" parameterClass="com.yxqm.console.web.bean.FootballMatchBean" resultClass="java.lang.Integer">
+        SELECT count(distinct m.match_id)
+		FROM t_win007_keli k
+		INNER JOIN t_win007match m ON m.match_id = k.match_id
+		where m.match_score is not null
+    </select>
+
+	<!-- 查询篮球先锋列表总条数 -->
+    <select id="queryBasketballMatchListRows" parameterClass="com.yxqm.console.web.bean.BasketballMatchBean" resultClass="java.lang.Integer">
+        select 
+	        count(distinct match_id)
+        from t_basketball
+		<dynamic prepend="where">
+			<isNotEmpty property="match_num" prepend="and">
+				match_num = #match_num#
+			</isNotEmpty>
+			<isNotEmpty property="match_status" prepend="and">
+				match_status = #match_status#
+			</isNotEmpty>
+			<isNotEmpty property="start_time" prepend="and">
+				DATE_FORMAT(m.match_time,'%Y-%m-%d %H:%i:%S') >= #start_time#
+			</isNotEmpty>
+			<isNotEmpty property="end_time" prepend="and">
+				DATE_FORMAT(m.match_time,'%Y-%m-%d %H:%i:%S') &lt; #end_time#
+			</isNotEmpty>
+			<isNotEmpty property="league_name" prepend="and">
+				league_name like '%$league_name$%'
+			</isNotEmpty>
+			<isNotEmpty property="home_team" prepend="and">
+				home_team like '%$home_team$%'
+			</isNotEmpty>
+			<isNotEmpty property="guest_team" prepend="and">
+				guest_team like '%$guest_team$%'
+			</isNotEmpty>
+			<isNotEmpty property="home_id" prepend="and">
+				home_id = #home_id#
+			</isNotEmpty>
+			<isNotEmpty property="guest_id" prepend="and">
+				guest_id = #guest_id#
+			</isNotEmpty>
+			<isNotEmpty property="team_name" prepend="and">
+				(home_team like '%$team_name$%' or guest_team like '%$team_name$%')
+			</isNotEmpty>
+		</dynamic>
+    </select>
+
+    <select id="queryFootballMatchList" parameterClass="com.yxqm.console.web.bean.FootballMatchBean" resultClass="com.yxqm.console.web.bean.FootballMatchBean">
+		SELECT k.match_id,
+		m.match_num,
+		m.match_time,
+		m.match_status,
+		STD(k.win_keli)*100 std_win_keli,
+		STD(k.draw_keli)*100 std_draw_keli,
+		STD(k.lost_keli)*100 std_lost_keli,
+		m.match_score,
+		m.league_name,
+		m.home_team,
+		m.guest_team,
+		m.guess,
+		m.win,
+		m.draw,
+		m.lost,
+		SUBSTRING_INDEX(m.match_score,'-',1)+ SUBSTRING_INDEX(m.match_score,'-',-1) sum_score
+		FROM t_win007_keli k
+		INNER JOIN t_win007match m ON m.match_id = k.match_id
+		where m.match_score is not null
+		<isNotEmpty prepend="and" property="match_id">
+			m.match_id = #match_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="match_num">
+			m.match_num = #match_num#
+		</isNotEmpty>
+		<isNotEmpty property="match_time" prepend="and">
+			DATE_FORMAT(m.match_time,'%Y-%m-%d') = #match_time#
+		</isNotEmpty>
+		<isNotEmpty property="match_status" prepend="and">
+			m.match_status = #match_status#
+		</isNotEmpty>
+		<isNotEmpty property="league_name" prepend="and">
+			m.league_name LIKE '%$league_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="home_team" prepend="and">
+			m.home_team LIKE '%$home_team$%'
+		</isNotEmpty>
+		<isNotEmpty property="guest_team" prepend="and">
+			m.guest_team LIKE '%$guest_team$%'
+		</isNotEmpty>
+		<isNotEmpty property="match_score" prepend="and">
+			having SUBSTRING_INDEX(m.match_score,'-',1)+SUBSTRING_INDEX(m.match_score,'-',-1) = #match_score#
+		</isNotEmpty>
+		GROUP BY k.match_id
+		order by m.match_time desc
+		<isGreaterThan property="beginPage" compareValue="-1">
+			<isGreaterThan property="endPage" compareValue="0">
+				LIMIT #beginPage#,#endPage#
+			</isGreaterThan>
+		</isGreaterThan>
+    </select>
+
+	<!-- 查询篮球先锋列表 -->
+    <select id="queryBasketballMatchList" parameterClass="com.yxqm.console.web.bean.BasketballMatchBean" resultClass="com.yxqm.console.web.bean.BasketballMatchBean">
+        select
+			m.match_id,
+			m.match_num,
+			DATE_FORMAT(m.match_time,'%Y-%m-%d %H:%i:%S') match_time,
+			m.match_status,
+			m.home_score,
+			m.guest_score,
+			m.league_name,
+			m.home_team,
+			m.home_id,
+			m.guest_team,
+			m.guest_id,
+			DATE_FORMAT(m.crt_time,'%Y-%m-%d %H:%i:%S') crt_time,
+			m.guess,
+			m.win,
+			m.lost,
+			m.outcome,
+			m.outcome_odds,
+			m.let_points,
+			m.let_points_odds,
+			m.score_diff,
+			m.score_diff_odds,
+			m.big_small_score,
+			m.big_small_score_odds
+		from t_basketball m
+		<dynamic prepend="where">
+			<isNotEmpty property="match_num" prepend="and">
+				match_num = #match_num#
+			</isNotEmpty>
+			<isNotEmpty property="match_status" prepend="and">
+				match_status = #match_status#
+			</isNotEmpty>
+			<isNotEmpty property="start_time" prepend="and">
+				DATE_FORMAT(m.match_time,'%Y-%m-%d %H:%i:%S') >= #start_time#
+			</isNotEmpty>
+			<isNotEmpty property="end_time" prepend="and">
+				DATE_FORMAT(m.match_time,'%Y-%m-%d %H:%i:%S') &lt; #end_time#
+			</isNotEmpty>
+			<isNotEmpty property="league_name" prepend="and">
+				league_name like '%$league_name$%'
+			</isNotEmpty>
+			<isNotEmpty property="home_team" prepend="and">
+				home_team like '%$home_team$%'
+			</isNotEmpty>
+			<isNotEmpty property="guest_team" prepend="and">
+				guest_team like '%$guest_team$%'
+			</isNotEmpty>
+			<isNotEmpty property="home_id" prepend="and">
+				home_id = #home_id#
+			</isNotEmpty>
+			<isNotEmpty property="guest_id" prepend="and">
+				guest_id = #guest_id#
+			</isNotEmpty>
+			<isNotEmpty property="team_name" prepend="and">
+				(home_team like '%$team_name$%' or guest_team like '%$team_name$%')
+			</isNotEmpty>
+		</dynamic>
+		order by m.match_time desc
+		<isGreaterThan property="curPage" compareValue="-1">
+			<isGreaterThan property="pageSize" compareValue="0">
+				LIMIT #curPage#,#pageSize#
+			</isGreaterThan>
+		</isGreaterThan>
+    </select>
+
+	<insert id="addMatch" parameterClass="com.yxqm.console.web.bean.MatchBean">
+	    INSERT INTO t_match(
+	     	crt_time,
+	     	mod_time
+	       <isNotEmpty property="match_name" prepend=",">
+	           match_name
+	       </isNotEmpty>
+	       <isNotEmpty property="match_title" prepend=",">
+	           match_title
+	       </isNotEmpty>
+	       <isNotEmpty property="match_time" prepend=",">
+	           match_time
+	       </isNotEmpty>
+	       <isNotEmpty property="match_desc" prepend=",">
+	           match_desc
+	       </isNotEmpty>
+	       <isNotEmpty property="push_result" prepend=",">
+	           push_result
+	       </isNotEmpty>
+	       <isNotEmpty property="match_result" prepend=",">
+	           match_result
+	       </isNotEmpty>
+	       <isNotEmpty property="match_money" prepend=",">
+	           match_money
+	       </isNotEmpty>
+	       <isNotEmpty property="match_summary" prepend=",">
+	           match_summary
+	       </isNotEmpty>
+	    )VALUES(
+	    	sysdate(),
+	    	sysdate()
+	       <isNotEmpty property="match_name" prepend=",">
+	           #match_name#
+	       </isNotEmpty>
+	       <isNotEmpty property="match_title" prepend=",">
+	           #match_title#
+	       </isNotEmpty>
+	       <isNotEmpty property="match_time" prepend=",">
+	           #match_time#
+	       </isNotEmpty>
+	       <isNotEmpty property="match_desc" prepend=",">
+	           #match_desc#
+	       </isNotEmpty>
+	       <isNotEmpty property="push_result" prepend=",">
+	           #push_result#
+	       </isNotEmpty>
+	       <isNotEmpty property="match_result" prepend=",">
+	           #match_result#
+	       </isNotEmpty>
+	       <isNotEmpty property="match_money" prepend=",">
+	           #match_money#
+	       </isNotEmpty>
+	       <isNotEmpty property="match_summary" prepend=",">
+	           #match_summary#
+	       </isNotEmpty>
+	    )
+		<selectKey resultClass="java.lang.String" keyProperty="match_id">
+			SELECT LAST_INSERT_ID() AS match_id
+		</selectKey>
+	</insert>
+
+	<insert id="addMatchList" parameterClass="com.yxqm.console.utils.bean.InitMatchBean">
+	    INSERT INTO t_football(
+	    	crt_time
+	       	<isNotEmpty property="match_id" prepend=",">
+	           	match_id
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_num" prepend=",">
+	           	match_num
+	       	</isNotEmpty>
+	       	<isNotEmpty property="home_team" prepend=",">
+	           	home_team
+	       	</isNotEmpty>
+	       	<isNotEmpty property="guest_team" prepend=",">
+	           	guest_team
+	       	</isNotEmpty>
+	       	<isNotEmpty property="league_name" prepend=",">
+	           	league_name
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_time" prepend=",">
+	           	match_time
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_score" prepend=",">
+	           	match_score
+	       	</isNotEmpty>
+			<isNotEmpty property="half_match_score" prepend=",">
+				half_match_score
+			</isNotEmpty>
+			<isNotEmpty property="home_score" prepend=",">
+				home_score
+			</isNotEmpty>
+			<isNotEmpty property="guest_score" prepend=",">
+				guest_score
+			</isNotEmpty>
+	       	<isNotEmpty property="match_status" prepend=",">
+	           	match_status
+	       	</isNotEmpty>
+	       	<isNotEmpty property="guess" prepend=",">
+	           	guess
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win" prepend=",">
+	           	win
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw" prepend=",">
+	           	draw
+			</isNotEmpty>
+	       	<isNotEmpty property="lost" prepend=",">
+	          	lost
+	       	</isNotEmpty>
+			<isNotEmpty property="outcome" prepend=",">
+				outcome
+	       	</isNotEmpty>
+			<isNotEmpty property="outcome_odds" prepend=",">
+				outcome_odds
+	       	</isNotEmpty>
+			<isNotEmpty property="let_points" prepend=",">
+				let_points
+	       	</isNotEmpty>
+			<isNotEmpty property="let_points_odds" prepend=",">
+				let_points_odds
+	       	</isNotEmpty>
+			<isNotEmpty property="goals" prepend=",">
+				goals
+	       	</isNotEmpty>
+			<isNotEmpty property="goals_odds" prepend=",">
+				goals_odds
+			</isNotEmpty>
+			<isNotEmpty property="half_result" prepend=",">
+				half_result
+			</isNotEmpty>
+			<isNotEmpty property="half_result_odds" prepend=",">
+				half_result_odds
+			</isNotEmpty>
+			<isNotEmpty property="score_diff" prepend=",">
+				score_diff
+			</isNotEmpty>
+			<isNotEmpty property="score_diff_odds" prepend=",">
+				score_diff_odds
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score" prepend=",">
+				big_small_score
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score_odds" prepend=",">
+				big_small_score_odds
+			</isNotEmpty>
+			<isNotEmpty property="score" prepend=",">
+				score
+			</isNotEmpty>
+			<isNotEmpty property="score_odds" prepend=",">
+				score_odds
+			</isNotEmpty>
+	    )VALUES(
+	    	sysdate()
+	    	<isNotEmpty property="match_id" prepend=",">
+	           	#match_id#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_num" prepend=",">
+	           	#match_num#
+	       </isNotEmpty>
+	       	<isNotEmpty property="home_team" prepend=",">
+	           	#home_team#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="guest_team" prepend=",">
+	           	#guest_team#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="league_name" prepend=",">
+	           	#league_name#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_time" prepend=",">
+	           	#match_time#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_score" prepend=",">
+	           	#match_score#
+	       	</isNotEmpty>
+			<isNotEmpty property="half_match_score" prepend=",">
+				#half_match_score#
+			</isNotEmpty>
+			<isNotEmpty property="home_score" prepend=",">
+				#home_score#
+			</isNotEmpty>
+			<isNotEmpty property="guest_score" prepend=",">
+				#guest_score#
+			</isNotEmpty>
+	       	<isNotEmpty property="match_status" prepend=",">
+	           	#match_status#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="guess" prepend=",">
+	           	#guess#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win" prepend=",">
+	           	#win#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw" prepend=",">
+	           	#draw#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost" prepend=",">
+	          	#lost#
+	       	</isNotEmpty>
+			<isNotEmpty property="outcome" prepend=",">
+				#outcome#
+			</isNotEmpty>
+			<isNotEmpty property="outcome_odds" prepend=",">
+				#outcome_odds#
+			</isNotEmpty>
+			<isNotEmpty property="let_points" prepend=",">
+				#let_points#
+			</isNotEmpty>
+			<isNotEmpty property="let_points_odds" prepend=",">
+				#let_points_odds#
+			</isNotEmpty>
+			<isNotEmpty property="goals" prepend=",">
+				#goals#
+			</isNotEmpty>
+			<isNotEmpty property="goals_odds" prepend=",">
+				#goals_odds#
+			</isNotEmpty>
+			<isNotEmpty property="half_result" prepend=",">
+				#half_result#
+			</isNotEmpty>
+			<isNotEmpty property="half_result_odds" prepend=",">
+				#half_result_odds#
+			</isNotEmpty>
+			<isNotEmpty property="score_diff" prepend=",">
+				#score_diff#
+			</isNotEmpty>
+			<isNotEmpty property="score_diff_odds" prepend=",">
+				#score_diff_odds#
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score" prepend=",">
+				#big_small_score#
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score_odds" prepend=",">
+				#big_small_score_odds#
+			</isNotEmpty>
+			<isNotEmpty property="score" prepend=",">
+				#score#
+			</isNotEmpty>
+			<isNotEmpty property="score_odds" prepend=",">
+				#score_odds#
+			</isNotEmpty>
+	    )
+	    <selectKey resultClass="java.lang.String" keyProperty="insert_id">
+			SELECT LAST_INSERT_ID() AS insert_id
+		</selectKey>
+	</insert>
+
+	<insert id="insertInitOdds" parameterClass="com.yxqm.console.utils.bean.InitOddsItem">
+	    INSERT INTO t_win007_keli(
+	       <isNotEmpty property="match_id">
+	           match_id
+	       </isNotEmpty>
+	       <isNotEmpty property="company_id" prepend=",">
+	           company_id
+	       </isNotEmpty>
+	       <isNotEmpty property="company_name" prepend=",">
+	           company_name
+	       </isNotEmpty>
+	       <isNotEmpty property="win_odd" prepend=",">
+	           win_odd
+	       </isNotEmpty>
+	       <isNotEmpty property="draw_odd" prepend=",">
+	           draw_odd
+	       </isNotEmpty>
+	       <isNotEmpty property="lost_odd" prepend=",">
+	           lost_odd
+	       </isNotEmpty>
+	       <isNotEmpty property="win_rate" prepend=",">
+	           win_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="draw_rate" prepend=",">
+	           draw_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="lost_rate" prepend=",">
+	           lost_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="return_rate" prepend=",">
+	           return_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="win_keli" prepend=",">
+	           win_keli
+	       </isNotEmpty>
+	       <isNotEmpty property="draw_keli" prepend=",">
+	           draw_keli
+	       </isNotEmpty>
+	       <isNotEmpty property="lost_keli" prepend=",">
+	           lost_keli
+	       </isNotEmpty>
+	    )VALUES(
+	    	<isNotEmpty property="match_id">
+	           #match_id#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="company_id" prepend=",">
+	           #company_id#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="company_name" prepend=",">
+	           #company_name#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win_odd" prepend=",">
+	           #win_odd#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw_odd" prepend=",">
+	           #draw_odd#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost_odd" prepend=",">
+	           #lost_odd#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win_rate" prepend=",">
+	           #win_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw_rate" prepend=",">
+	           #draw_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost_rate" prepend=",">
+	           #lost_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="return_rate" prepend=",">
+	           #return_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win_keli" prepend=",">
+	           #win_keli#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw_keli" prepend=",">
+	           #draw_keli#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost_keli" prepend=",">
+	           #lost_keli#
+	       	</isNotEmpty>
+	    )
+	    <selectKey resultClass="java.lang.String" keyProperty="insert_id">
+			SELECT LAST_INSERT_ID() AS insert_id
+		</selectKey>
+	</insert>
+
+	<insert id="insertNBAOdds" parameterClass="com.yxqm.console.utils.bean.InitOddsItem">
+	    INSERT INTO t_basketball_keli(
+	       <isNotEmpty property="match_id">
+	           match_id
+	       </isNotEmpty>
+	       <isNotEmpty property="company_id" prepend=",">
+	           company_id
+	       </isNotEmpty>
+	       <isNotEmpty property="company_name" prepend=",">
+	           company_name
+	       </isNotEmpty>
+	       <isNotEmpty property="win_odd" prepend=",">
+	           win_odd
+	       </isNotEmpty>
+	       <isNotEmpty property="draw_odd" prepend=",">
+	           draw_odd
+	       </isNotEmpty>
+	       <isNotEmpty property="lost_odd" prepend=",">
+	           lost_odd
+	       </isNotEmpty>
+	       <isNotEmpty property="win_rate" prepend=",">
+	           win_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="draw_rate" prepend=",">
+	           draw_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="lost_rate" prepend=",">
+	           lost_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="return_rate" prepend=",">
+	           return_rate
+	       </isNotEmpty>
+	       <isNotEmpty property="win_keli" prepend=",">
+	           win_keli
+	       </isNotEmpty>
+	       <isNotEmpty property="draw_keli" prepend=",">
+	           draw_keli
+	       </isNotEmpty>
+	       <isNotEmpty property="lost_keli" prepend=",">
+	           lost_keli
+	       </isNotEmpty>
+	    )VALUES(
+	    	<isNotEmpty property="match_id">
+	           #match_id#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="company_id" prepend=",">
+	           #company_id#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="company_name" prepend=",">
+	           #company_name#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win_odd" prepend=",">
+	           #win_odd#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw_odd" prepend=",">
+	           #draw_odd#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost_odd" prepend=",">
+	           #lost_odd#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win_rate" prepend=",">
+	           #win_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw_rate" prepend=",">
+	           #draw_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost_rate" prepend=",">
+	           #lost_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="return_rate" prepend=",">
+	           #return_rate#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win_keli" prepend=",">
+	           #win_keli#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw_keli" prepend=",">
+	           #draw_keli#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost_keli" prepend=",">
+	           #lost_keli#
+	       	</isNotEmpty>
+	    )
+	    <selectKey resultClass="java.lang.String" keyProperty="insert_id">
+			SELECT LAST_INSERT_ID() AS insert_id
+		</selectKey>
+	</insert>
+
+	<insert id="addBasketballList" parameterClass="com.yxqm.console.utils.bean.InitMatchBean">
+	    INSERT INTO t_basketball(
+	    	crt_time
+		   	<isNotEmpty property="match_id" prepend=",">
+			   	match_id
+		   	</isNotEmpty>
+		   	<isNotEmpty property="match_num" prepend=",">
+			   	match_num
+		   	</isNotEmpty>
+		   	<isNotEmpty property="home_team" prepend=",">
+			   	home_team
+		   	</isNotEmpty>
+		   	<isNotEmpty property="guest_team" prepend=",">
+			   	guest_team
+		   	</isNotEmpty>
+		   	<isNotEmpty property="league_name" prepend=",">
+			   	league_name
+		   	</isNotEmpty>
+		   	<isNotEmpty property="match_time" prepend=",">
+			   	match_time
+		   	</isNotEmpty>
+		   	<isNotEmpty property="home_score" prepend=",">
+			   	home_score
+		   	</isNotEmpty>
+		   	<isNotEmpty property="guest_score" prepend=",">
+			   	guest_score
+		   	</isNotEmpty>
+		   	<isNotEmpty property="match_status" prepend=",">
+			   	match_status
+		   	</isNotEmpty>
+		   	<isNotEmpty property="guess" prepend=",">
+			   	guess
+		   	</isNotEmpty>
+		   	<isNotEmpty property="win" prepend=",">
+			   	win
+		   	</isNotEmpty>
+		   	<isNotEmpty property="draw" prepend=",">
+			   	draw
+		   	</isNotEmpty>
+		   	<isNotEmpty property="lost" prepend=",">
+			   	lost
+		   	</isNotEmpty>
+
+		   	<isNotEmpty property="outcome" prepend=",">
+				outcome
+		   	</isNotEmpty>
+			<isNotEmpty property="outcome_odds" prepend=",">
+				outcome_odds
+			</isNotEmpty>
+			<isNotEmpty property="let_points" prepend=",">
+				let_points
+			</isNotEmpty>
+			<isNotEmpty property="let_points_odds" prepend=",">
+				let_points_odds
+			</isNotEmpty>
+			<isNotEmpty property="score_diff" prepend=",">
+				score_diff
+			</isNotEmpty>
+			<isNotEmpty property="score_diff_odds" prepend=",">
+				score_diff_odds
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score" prepend=",">
+				big_small_score
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score_odds" prepend=",">
+				big_small_score_odds
+			</isNotEmpty>
+	    )VALUES(
+	    	sysdate()
+	    	<isNotEmpty property="match_id" prepend=",">
+	           #match_id#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_num" prepend=",">
+	           #match_num#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="home_team" prepend=",">
+	           #home_team#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="guest_team" prepend=",">
+	           #guest_team#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="league_name" prepend=",">
+	           #league_name#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="match_time" prepend=",">
+	           #match_time#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="home_score" prepend=",">
+	           #home_score#
+	       	</isNotEmpty>
+			<isNotEmpty property="guest_score" prepend=",">
+				#guest_score#
+			</isNotEmpty>
+	       	<isNotEmpty property="match_status" prepend=",">
+	           #match_status#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="guess" prepend=",">
+	           #guess#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="win" prepend=",">
+	           #win#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="draw" prepend=",">
+	           #draw#
+	       	</isNotEmpty>
+	       	<isNotEmpty property="lost" prepend=",">
+	           #lost#
+	       	</isNotEmpty>
+			<isNotEmpty property="outcome" prepend=",">
+				#outcome#
+			</isNotEmpty>
+			<isNotEmpty property="outcome_odds" prepend=",">
+				#outcome_odds#
+			</isNotEmpty>
+			<isNotEmpty property="let_points" prepend=",">
+				#let_points#
+			</isNotEmpty>
+			<isNotEmpty property="let_points_odds" prepend=",">
+				#let_points_odds#
+			</isNotEmpty>
+			<isNotEmpty property="score_diff" prepend=",">
+				#score_diff#
+			</isNotEmpty>
+			<isNotEmpty property="score_diff_odds" prepend=",">
+				#score_diff_odds#
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score" prepend=",">
+				#big_small_score#
+			</isNotEmpty>
+			<isNotEmpty property="big_small_score_odds" prepend=",">
+				#big_small_score_odds#
+			</isNotEmpty>
+	    )
+	    <selectKey resultClass="java.lang.String" keyProperty="insert_id">
+			SELECT LAST_INSERT_ID() AS insert_id
+		</selectKey>
+	</insert>
+
+	<update id="updateMatchList" parameterClass="com.yxqm.console.utils.bean.InitMatchBean">
+		UPDATE t_win007match SET match_id = match_id
+		    <isNotEmpty prepend="," property="match_num">
+		       	match_num = #match_num#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="home_team">
+				home_team = #home_team#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="guest_team">
+	        	guest_team = #guest_team#
+	       	</isNotEmpty>
+			<isNotEmpty prepend="," property="league_name">
+				league_name = #league_name#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="match_time">
+				match_time = #match_time#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="match_score">
+				match_score = #match_score#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="match_status">
+				match_status = #match_status#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="guess">
+				guess = #guess#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="win">
+				win = #win#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="draw">
+				draw = #draw#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="lost">
+				lost = #lost#
+			</isNotEmpty>
+	    WHERE match_id = #match_id#
+	</update>
+
+	<update id="updateNBAMatchList" parameterClass="com.yxqm.console.utils.bean.InitMatchBean">
+		UPDATE t_win007_nba SET match_id = match_id
+		    <isNotEmpty prepend="," property="match_num">
+		       	match_num = #match_num#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="home_team">
+				home_team = #home_team#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="guest_team">
+	        	guest_team = #guest_team#
+	       	</isNotEmpty>
+			<isNotEmpty prepend="," property="league_name">
+				league_name = #league_name#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="match_time">
+				match_time = #match_time#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="match_score">
+				match_score = #match_score#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="match_status">
+				match_status = #match_status#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="guess">
+				guess = #guess#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="win">
+				win = #win#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="draw">
+				draw = #draw#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="lost">
+				lost = #lost#
+			</isNotEmpty>
+	    WHERE match_id = #match_id#
+	</update>
+
+	<select id="selectMatchList" parameterClass="com.yxqm.console.utils.bean.InitMatchBean" resultClass="com.yxqm.console.utils.bean.InitMatchBean">
+        select 
+			m.match_id,
+			m.home_team,
+			m.guest_team,
+			m.match_num,
+			m.league_name,
+			m.match_score,
+			m.home_score,
+			m.guest_score,
+			m.guess,
+			DATE_FORMAT(m.match_time,'%Y-%m-%d %H:%i:%S') match_time,
+			DATE_FORMAT(m.crt_time,'%Y-%m-%d %H:%i:%S') crt_time
+		from t_football m
+		where m.match_id = #match_id#
+    </select>
+
+	<select id="selectBasketballList" parameterClass="com.yxqm.console.utils.bean.InitMatchBean" resultClass="com.yxqm.console.utils.bean.InitMatchBean">
+        select 
+			m.match_id,
+			m.home_team,
+			m.guest_team,
+			m.match_num,
+			m.league_name,
+			m.home_score,
+			m.guest_score,
+			m.guess,
+			DATE_FORMAT(m.match_time,'%Y-%m-%d %H:%i:%S') match_time,
+			DATE_FORMAT(m.crt_time,'%Y-%m-%d %H:%i:%S') crt_time
+		from t_basketball m
+		where m.match_id = #match_id#
+    </select>
+
+	<select id="queryMatchScoreList" parameterClass="com.yxqm.console.web.bean.FootballMatchBean" resultClass="com.yxqm.console.web.bean.FootballMatchBean">
+		select distinct SUBSTRING_INDEX(m.match_score,'-',1)+SUBSTRING_INDEX(m.match_score,'-',-1) sum_score
+    	FROM t_win007match m
+	</select>
+
+	<select id="queryMatchTimeList" parameterClass="com.yxqm.console.web.bean.FootballMatchBean" resultClass="com.yxqm.console.web.bean.FootballMatchBean">
+		select distinct DATE_FORMAT(m.match_time,'%Y-%m-%d') match_time
+		FROM t_win007match m
+		order by match_time desc
+	</select>
+
+	<select id="queryMatchScoreTimeList" parameterClass="hashMap" resultClass="hashMap">
+		select t.num sum_score,t.mtime match_time,count(1) score_count from (
+			select SUBSTRING_INDEX(m.match_score,'-',1)+SUBSTRING_INDEX(m.match_score,'-',-1) num,DATE_FORMAT(m.match_time,'%Y-%m-%d') mtime
+			FROM t_win007match m ) t
+		where t.num is not null
+		<isNotEmpty prepend="and" property="start_time">
+			t.mtime >= #start_time#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="end_time">
+			<![CDATA[
+				t.mtime < #end_time#
+			]]>
+		</isNotEmpty>
+		group by t.num
+		order by t.mtime desc
+	</select>
+
+	<select id="queryMatchKeliList" parameterClass="hashMap" resultClass="hashMap">
+		SELECT win_rate,draw_rate,lost_rate,win_keli,draw_keli,lost_keli
+		FROM t_win007_keli
+		WHERE win_rate != 0 AND draw_rate != 0 AND lost_rate != 0
+		<isNotEmpty prepend="AND" property="match_id">
+			match_id = #match_id#
+		</isNotEmpty>
+	</select>
+
+	<!-- 查询球队走势图 -->
+	<select id="queryTeamDetailList" parameterClass="com.yxqm.console.web.bean.BasketballMatchBean" resultClass="com.yxqm.console.web.bean.BasketballMatchBean">
+		SELECT
+			match_num,
+			match_time,
+			match_status,
+			home_score,
+			guest_score,
+			league_name,
+			SUBSTRING_INDEX(home_team,'(',1) home_team,
+			guest_team,
+			home_id,
+			guest_id,
+			outcome,
+			let_points,
+			score_diff,
+			big_small_score
+		FROM t_basketball
+		WHERE match_status = '完'
+		<isNotEmpty prepend="AND" property="league_name">
+			league_name = #league_name#
+		</isNotEmpty>
+		<isEmpty prepend="AND" property="is_true">
+			<isNotEmpty property="home_id">
+				(home_id = #home_id# OR guest_id = #home_id#)
+			</isNotEmpty>
+			<isNotEmpty property="guest_id">
+				(home_id = #guest_id# OR guest_id = #guest_id#)
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty prepend="AND" property="is_true">
+			<isNotEmpty property="home_id">
+				<isNotEmpty property="guest_id">
+					((home_id = #home_id# and guest_id = #guest_id#) or (home_id = #guest_id# and guest_id = #home_id#))
+				</isNotEmpty>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="match_time">
+			<![CDATA[
+				match_time <= #match_time#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="start_time">
+			match_time >= #start_time#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="end_time">
+			<![CDATA[
+				match_time < #end_time#
+			]]>
+		</isNotEmpty>
+		order by match_time
+		<isGreaterThan property="count" compareValue="0">
+			LIMIT 0,#count#
+		</isGreaterThan>
+	</select>
+
+	<!-- 查询篮球球队名称列表 -->
+	<select id="queryBasketballTeamList" parameterClass="com.yxqm.console.web.bean.BasketballMatchBean" resultClass="com.yxqm.console.web.bean.BasketballMatchBean">
+		select distinct guest_team,guest_id
+		from t_basketball
+		<dynamic prepend="where">
+			<isNotEmpty property="league_name">
+				league_name = #league_name#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<!-- 查询篮球联赛列表 -->
+	<select id="queryBasketBallLeagueList" parameterClass="com.yxqm.console.web.bean.BasketballMatchBean" resultClass="com.yxqm.console.web.bean.BasketballMatchBean">
+		select distinct league_name
+		from t_basketball
+	</select>
+
+	<update id="editBasketballMatch" parameterClass="com.yxqm.console.web.bean.BasketballMatchBean">
+		UPDATE t_basketball SET
+		match_id = match_id,
+		crt_time = sysdate()
+		<isNotEmpty property="match_num" prepend=",">
+			match_num = #match_num#
+		</isNotEmpty>
+		<isNotEmpty property="match_time" prepend=",">
+			match_time = #match_time#
+		</isNotEmpty>
+		<isNotEmpty property="match_status" prepend=",">
+			match_status = #match_status#
+		</isNotEmpty>
+		<isNotEmpty property="home_score" prepend=",">
+			home_score = #home_score#
+		</isNotEmpty>
+		<isNotEmpty property="api_element_type" prepend=",">
+			guest_score = #guest_score#
+		</isNotEmpty>
+		<isNotEmpty property="league_name" prepend=",">
+			league_name = #league_name#
+		</isNotEmpty>
+		<isNotEmpty property="home_team" prepend=",">
+			home_team = #home_team#
+		</isNotEmpty>
+		<isNotEmpty property="home_id" prepend=",">
+			home_id = #home_id#
+		</isNotEmpty>
+		<isNotEmpty property="guest_team" prepend=",">
+			guest_team = #guest_team#
+		</isNotEmpty>
+		<isNotEmpty property="guest_id" prepend=",">
+			guest_id = #guest_id#
+		</isNotEmpty>
+		<isNotEmpty property="league_name" prepend=",">
+			league_name = #league_name#
+		</isNotEmpty>
+		<isNotEmpty property="league_name" prepend=",">
+			league_name = #league_name#
+		</isNotEmpty>
+		<isNotEmpty property="league_name" prepend=",">
+			league_name = #league_name#
+		</isNotEmpty>
+		<isNotEmpty property="league_name" prepend=",">
+			league_name = #league_name#
+		</isNotEmpty>
+		<isNotEmpty property="league_name" prepend=",">
+			league_name = #league_name#
+		</isNotEmpty>
+		<isNotEmpty property="guess" prepend=",">
+			guess = #guess#
+		</isNotEmpty>
+		<isNotEmpty property="win" prepend=",">
+			win = #win#
+		</isNotEmpty>
+		<isNotEmpty property="lost" prepend=",">
+			lost = #lost#
+		</isNotEmpty>
+		<isNotEmpty property="outcome" prepend=",">
+			outcome = #outcome#
+		</isNotEmpty>
+		<isNotEmpty property="outcome_odds" prepend=",">
+			outcome_odds = #outcome_odds#
+		</isNotEmpty>
+		<isNotEmpty property="let_points" prepend=",">
+			let_points = #let_points#
+		</isNotEmpty>
+		<isNotEmpty property="let_points_odds" prepend=",">
+			let_points_odds = #let_points_odds#
+		</isNotEmpty>
+		<isNotEmpty property="score_diff" prepend=",">
+			score_diff = #score_diff#
+		</isNotEmpty>
+		<isNotEmpty property="score_diff_odds" prepend=",">
+			score_diff_odds = #score_diff_odds#
+		</isNotEmpty>
+		<isNotEmpty property="big_small_score" prepend=",">
+			big_small_score = #big_small_score#
+		</isNotEmpty>
+		<isNotEmpty property="big_small_score_odds" prepend=",">
+			big_small_score_odds = #big_small_score_odds#
+		</isNotEmpty>
+		WHERE match_id = #match_id#
+	</update>
+
+</sqlMap>

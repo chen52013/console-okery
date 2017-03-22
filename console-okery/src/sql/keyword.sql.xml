@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="keyword">
+
+    <select id="queryKeyWordList" parameterClass="com.yxqm.console.web.bean.KeywordBean" resultClass="hashMap">
+        select
+        k.id,
+        k.type_name,
+        k.keyword_name,
+        k.title,
+        k.url,
+        k.keyword_status,
+        DATE_FORMAT(k.crt_time,'%Y-%m-%d %H:%i:%S') crt_time,
+        DATE_FORMAT(k.mod_time,'%Y-%m-%d %H:%i:%S') mod_time
+        from t_keyword k
+        <dynamic prepend="where">
+            <isNotEmpty property="type_name" prepend="and">
+                k.type_name LIKE '%$type_name$%'
+            </isNotEmpty>
+            <isNotEmpty property="keyword_name" prepend="and">
+                k.keyword_name LIKE '%$keyword_name$%'
+            </isNotEmpty>
+            <isNotEmpty property="title" prepend="and">
+                k.title LIKE '%$title$%'
+            </isNotEmpty>
+            <isNotEmpty property="url" prepend="and">
+                k.url LIKE '%$url$%'
+            </isNotEmpty>
+            <isNotEmpty property="keyword_status" prepend="and">
+                k.keyword_status = #keyword_status#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="queryKeyWordListRows" parameterClass="com.yxqm.console.web.bean.KeywordBean" resultClass="java.lang.Integer">
+        select
+        count(distinct k.id)
+        from t_keyword k
+        <dynamic prepend="where">
+            <isNotEmpty property="type_name" prepend="and">
+                k.type_name LIKE '%$type_name$%'
+            </isNotEmpty>
+            <isNotEmpty property="keyword_name" prepend="and">
+                k.keyword_name LIKE '%$keyword_name$%'
+            </isNotEmpty>
+            <isNotEmpty property="title" prepend="and">
+                k.title LIKE '%$title$%'
+            </isNotEmpty>
+            <isNotEmpty property="url" prepend="and">
+                k.url LIKE '%$url$%'
+            </isNotEmpty>
+            <isNotEmpty property="keyword_status" prepend="and">
+                k.keyword_status = #keyword_status#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <insert id="addKeyword" parameterClass="com.yxqm.console.web.bean.KeywordBean">
+        INSERT INTO t_keyword(
+            crt_time,
+            mod_time
+            <isNotEmpty property="type_name" prepend=",">
+                type_name
+            </isNotEmpty>
+            <isNotEmpty property="keyword_name" prepend=",">
+                keyword_name
+            </isNotEmpty>
+            <isNotEmpty property="title" prepend=",">
+                title
+            </isNotEmpty>
+            <isNotEmpty property="url" prepend=",">
+                url
+            </isNotEmpty>
+            <isNotEmpty property="keyword_status" prepend=",">
+                keyword_status
+            </isNotEmpty>
+        )VALUES(
+            sysdate(),
+            sysdate()
+            <isNotEmpty property="type_name" prepend=",">
+                #type_name#
+            </isNotEmpty>
+            <isNotEmpty property="keyword_name" prepend=",">
+                #keyword_name#
+            </isNotEmpty>
+            <isNotEmpty property="title" prepend=",">
+                #title#
+            </isNotEmpty>
+            <isNotEmpty property="url" prepend=",">
+                #url#
+            </isNotEmpty>
+            <isNotEmpty property="keyword_status" prepend=",">
+                #keyword_status#
+            </isNotEmpty>
+        )
+        <selectKey resultClass="java.lang.String" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+    </insert>
+
+    <update id="updateKeyword" parameterClass="com.yxqm.console.system.bean.MenuBean">
+        UPDATE t_keyword SET id = id,mod_time = sysdate()
+        <isNotEmpty prepend="," property="type_name">
+            type_name = #type_name#
+        </isNotEmpty>
+        <isNotEmpty prepend="," property="keyword_name">
+            keyword_name = #keyword_name#
+        </isNotEmpty>
+        <isNotEmpty prepend="," property="title">
+            title = #title#
+        </isNotEmpty>
+        <isNotEmpty prepend="," property="url">
+            url = #url#
+        </isNotEmpty>
+        <isNotEmpty prepend="," property="keyword_status">
+            keyword_status = #keyword_status#
+        </isNotEmpty>
+        WHERE id = #id#
+    </update>
+
+</sqlMap>

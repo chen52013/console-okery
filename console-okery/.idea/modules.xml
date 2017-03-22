@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../console-happy/console-happy.iml" filepath="$PROJECT_DIR$/../console-happy/console-happy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/console-okery.iml" filepath="$PROJECT_DIR$/console-okery.iml" />
+    </modules>
+  </component>
+</project>

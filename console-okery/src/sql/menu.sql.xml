@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="menu">
+    <resultMap class="com.yxqm.console.system.bean.MenuBean" id="menuMap">
+       <result property="menu_id" column="menu_id" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="0" />
+       <result property="menu_name" column="menu_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="menu_url" column="menu_url" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="menu_index" column="menu_index" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="0" />
+       <result property="home_page_id" column="home_page_id" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="0" />
+       <result property="parent_id" column="parent_id" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="0" />
+       <result property="menu_level" column="menu_level" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="0" />
+       <result property="menu_code" column="menu_code" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="resource_url" column="resource_url" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="class_name" column="class_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+    </resultMap>
+    
+    <select id="queryMenu" parameterClass="com.yxqm.console.system.bean.MenuBean" resultMap="menuMap">
+        select 
+           a.menu_id,
+           a.menu_name,
+           a.menu_url,
+           a.menu_index,
+           a.home_page_id,
+           a.parent_id,
+           a.menu_level,
+           a.menu_code,
+           a.class_name,
+           b.resource_url
+         from t_sys_menu a left join t_sys_resources b on a.menu_code = b.menu_code
+    </select>
+    
+    <select id="queryMenuRows" parameterClass="com.yxqm.console.system.bean.MenuBean" resultClass="java.lang.Integer">
+		SELECT COUNT(menu_id) FROM t_sys_menu 
+		WHERE 1=1
+	   	<isNotEmpty property="menu_name" prepend="and">
+			menu_name LIKE '%$menu_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="menu_code" prepend="and">
+			menu_code LIKE '%$menu_code$%'
+		</isNotEmpty>
+		<isNotEmpty property="menu_level" prepend="and">
+			menu_level = #menu_level#
+		</isNotEmpty>
+		<isNotEmpty property="parent_id" prepend="and">
+			parent_id = #parent_id#
+		</isNotEmpty>
+		<isNotEmpty property="menu_index" prepend="and">
+			menu_index = #menu_index#
+		</isNotEmpty>
+		<!-- <isNotEmpty property="u_user_code" prepend="and">
+			u_user_code LIKE '%$u_user_code$%'
+		</isNotEmpty>
+		<isNotEmpty property="u_status" prepend="and">
+			u_status = #u_status#
+		</isNotEmpty> -->
+    </select>
+    
+    <select id="queryMenuList" parameterClass="com.yxqm.console.system.bean.MenuBean" resultClass="java.util.HashMap">
+		SELECT
+			a.menu_id,
+			a.menu_name,
+			a.menu_url,
+			a.menu_index,
+			a.parent_id,
+			(select menu_name from t_sys_menu where menu_id=a.parent_id) as parent_name,
+			a.home_page_id,
+			a.menu_level,
+			a.class_name,
+			a.menu_code
+		FROM
+			t_sys_menu a
+		WHERE
+			1 = 1      
+    	<isNotEmpty property="menu_name" prepend="and">
+			menu_name LIKE '%$menu_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="menu_code" prepend="and">
+			menu_code LIKE '%$menu_code$%'
+		</isNotEmpty>
+		<isNotEmpty property="menu_level" prepend="and">
+			menu_level = #menu_level#
+		</isNotEmpty>
+		<isNotEmpty property="parent_id" prepend="and">
+			parent_id = #parent_id#
+		</isNotEmpty>
+		<isNotEmpty property="menu_index" prepend="and">
+			menu_index = #menu_index#
+		</isNotEmpty>
+		LIMIT #beginPage#,#endPage#
+    </select>
+    
+	<select id="queryParentMenuSelectList" parameterClass="com.yxqm.console.system.bean.MenuBean" resultClass="java.util.HashMap">
+		SELECT
+			a.menu_id,
+			a.menu_name,
+			a.menu_url,
+			a.menu_index,
+			a.parent_id,
+			a.menu_level
+		FROM
+			t_sys_menu a
+		WHERE
+			1 = 1      
+		<isNotEmpty property="menu_level" prepend="and">
+		a.menu_level in ($menu_level$)
+		</isNotEmpty>
+    </select>
+    
+    <insert id="addMenu" parameterClass="com.yxqm.console.system.bean.MenuBean">
+	    INSERT INTO t_sys_menu(
+	       <isNotEmpty property="menu_name">
+	           menu_name
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_url" prepend=",">
+	           menu_url
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_index" prepend=",">
+	           menu_index
+	       </isNotEmpty>
+	       <isNotEmpty property="parent_id" prepend=",">
+	           parent_id
+	       </isNotEmpty>
+	       <isNotEmpty property="class_name" prepend=",">
+	           class_name
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_level" prepend=",">
+	           menu_level
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_code" prepend=",">
+	           menu_code
+	       </isNotEmpty>
+	    )VALUES(
+	       <isNotEmpty property="menu_name">
+	           #menu_name#
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_url" prepend=",">
+	           #menu_url#
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_index" prepend=",">
+	           #menu_index#
+	       </isNotEmpty>
+	       <isNotEmpty property="parent_id" prepend=",">
+	           #parent_id#
+	       </isNotEmpty>
+	       <isNotEmpty property="class_name" prepend=",">
+	           #class_name#
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_level" prepend=",">
+	           #menu_level#
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_code" prepend=",">
+	           #menu_code#
+	       </isNotEmpty>
+	    )
+		<selectKey resultClass="java.lang.String" keyProperty="menu_id">    
+			SELECT LAST_INSERT_ID() AS menu_id
+		</selectKey>
+	</insert>
+	
+	<select id="queryMenuById" parameterClass="java.lang.String" resultClass="com.yxqm.console.system.bean.MenuBean">
+	   SELECT
+			menu_id,
+			menu_name,
+			menu_url,
+			menu_index,
+			parent_id,
+			menu_level
+		FROM
+			t_sys_menu
+		WHERE menu_id = #menu_id#
+	</select>
+	
+	<update id="updateMenu" parameterClass="com.yxqm.console.system.bean.MenuBean">
+	    UPDATE t_sys_menu SET menu_id = menu_id
+		    <isNotEmpty prepend="," property="menu_name">
+		       menu_name = #menu_name#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="menu_url">
+			menu_url = #menu_url#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="menu_index">
+	        menu_index = #menu_index#
+	       </isNotEmpty>
+			<isNotEmpty prepend="," property="parent_id">
+			parent_id = #parent_id#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="menu_level">
+			menu_level = #menu_level#
+			</isNotEmpty>
+	    WHERE menu_id = #menu_id#
+	</update>
+	
+	<delete id="deleteMenu" parameterClass="com.yxqm.console.system.bean.MenuBean">
+	    delete from t_sys_menu where menu_id = #menu_id#
+	</delete>
+	
+	<delete id="deleteSubMenu" parameterClass="com.yxqm.console.system.bean.MenuBean">
+	    delete from t_sys_menu where parent_id = #menu_id#
+	</delete>
+	
+</sqlMap>

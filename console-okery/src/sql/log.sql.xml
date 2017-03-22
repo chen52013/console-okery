@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="syslog">
+     <insert id="insertLog" parameterClass="com.yxqm.console.system.bean.LogBean">
+        insert into T_SYS_LOG(
+           OPT_USER,
+           OPT_USER_CODE,
+           OPT_FUN,
+           OPT_FUN_DESC,
+           OPT_TIME,
+           OPT_RES,
+           OPT_TYPE,
+           OPT_AFTER,
+           OPT_PARAM
+        )values(
+           #optUser#,
+           #optUserCode#,
+           #optFun#,
+           #optFunDesc#,
+           sysdate(),
+           #optRes#,
+           #optType#,
+           #optAfter#,
+           #optParam#
+        )
+     </insert>
+	
+	<select id="querySysLog" parameterClass="com.yxqm.console.system.bean.LogBean" resultClass="com.yxqm.console.system.bean.LogBean">
+	   select 
+	      LOG_ID as logId,
+	      OPT_USER as optUser,
+	      OPT_USER_CODE as optUserCode,
+	      OPT_FUN as optFun,
+	      OPT_FUN_DESC as optFunDesc,
+	      OPT_TIME as optTime,
+	      OPT_RES as optRes,
+	      OPT_TYPE as optType
+	   from T_SYS_LOG
+	   <dynamic prepend="where">
+	      <isNotEmpty prepend="and" property="logId">
+	          LOG_ID = #logId#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="optUser">
+	      	  OPT_USER like '%$optUser$%'
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="optFun">
+	          OPT_FUN  like '%$optFun$%'
+	      </isNotEmpty>
+	      <isNotEmpty property="optTimeBegin" prepend="and">
+			<![CDATA[
+	        DATE_FORMAT(OPT_TIME,'%Y-%m-%d %H:%i:%S') >= #optTimeBegin#
+	     	]]>
+		 </isNotEmpty>
+		 <isNotEmpty property="optTimeEnd" prepend="and">
+			<![CDATA[
+	        DATE_FORMAT(OPT_TIME,'%Y-%m-%d %H:%i:%S') <= #optTimeEnd#
+	     	]]>
+		 </isNotEmpty>
+		 <isNotEmpty property="optType" prepend="and">
+		     OPT_TYPE = #optType#
+		 </isNotEmpty>
+	   </dynamic>
+	  order by OPT_TIME DESC
+	</select>
+</sqlMap>

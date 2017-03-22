@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="console-okery:exploded">
+    <output-path>$PROJECT_DIR$/classes/artifacts/console_okery_exploded</output-path>
+    <root id="root">
+      <element id="module-output" name="console-okery" />
+    </root>
+  </artifact>
+</component>

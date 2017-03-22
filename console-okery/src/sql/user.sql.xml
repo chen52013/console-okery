@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="user">
+    <resultMap class="com.yxqm.console.system.bean.UserBean" id="userMap">
+       <result property="userId" column="u_user_id" javaType="java.lang.Long" jdbcType="NUMBER" nullValue="0" />
+		<result property="userName" column="u_user_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="loginName" column="u_login_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="loginPwd" column="u_login_pwd" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="u_mobile" column="u_mobile" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="status" column="u_status" javaType="java.lang.Integer" jdbcType="NUMBER" nullValue="0" />
+		<result property="userCode" column="u_user_code" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="extSysId" column="ext_sys_id" javaType="java.lang.Integer" jdbcType="NUMBER" nullValue="0" />
+		<result property="extSysObjectId" column="ext_sys_object_id" javaType="java.lang.Integer" jdbcType="NUMBER" nullValue="0" />
+		<result property="extSysObjectValue" column="ext_sys_object_value" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="is_auth" column="is_auth" javaType="java.lang.Integer" jdbcType="java.lang.Integer" nullValue="0" />
+		<result property="secret_key" column="secret_key" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       
+    </resultMap>
+    
+    <resultMap class="com.yxqm.console.system.bean.RoleBean" id="roleMap">
+       <result property="roleId" column="role_id" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="roleName" column="role_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="roleDesc" column="role_desc" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="roleCode" column="role_code" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+    </resultMap>
+    
+    <resultMap class="com.yxqm.console.system.bean.ResourceBean" id="resourceMap">
+       <result property="resourceId" column="resource_id" javaType="java.lang.Long" jdbcType="NUMBER" nullValue="0" />
+       <result property="resourceName" column="resource_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="resourceCode" column="resource_code" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="resourceDesc" column="resource_desc" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="resourceUrl" column="resource_url" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+       <result property="resourceType" column="resource_type" javaType="java.lang.Integer" jdbcType="NUMBER" nullValue="0" />
+    </resultMap>
+    
+    <resultMap class="com.yxqm.console.system.bean.PrivilegeBean" id="privilegeBeanMap">
+       <result property="privilege_id" column="privilege_id" javaType="java.lang.String" jdbcType="VARCHAR" nullValue=""/>
+       <result property="privilege_name" column="privilege_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue=""/>
+       <result property="privilege_desc" column="privilege_desc" javaType="java.lang.String" jdbcType="VARCHAR" nullValue=""/>
+       <result property="privilege_code" column="privilege_code" javaType="java.lang.String" jdbcType="VARCHAR" nullValue=""/>
+    </resultMap>
+    
+    <resultMap class="com.yxqm.console.system.bean.PrivilegeResourceRefBean" id="privilegeResourceRefBeanMap">
+       <result property="ref_id" column="ref_id" javaType="java.lang.String" jdbcType="VARCHAR"  nullValue=""/>
+       <result property="privilege_code" column="privilege_code" javaType="java.lang.String" jdbcType="VARCHAR"  nullValue=""/>
+       <result property="resource_code" column="resource_code" javaType="java.lang.String" jdbcType="VARCHAR"  nullValue=""/>
+       <result property="resource_name" column="resource_name" javaType="java.lang.String" jdbcType="VARCHAR"  nullValue=""/>
+    </resultMap>
+    
+    <resultMap class="com.yxqm.console.system.bean.RolePrivilegeRefBean" id="rolePrivilegeRefBeanMap">
+       <result property="ref_id" column="ref_id" javaType="java.lang.String" jdbcType="VARCHAR"  nullValue=""/>
+       <result property="privilege_code" column="privilege_code" javaType="java.lang.String" jdbcType="VARCHAR"  nullValue=""/>
+       <result property="role_code" column="role_code" javaType="java.lang.String" jdbcType="VARCHAR"  nullValue=""/>
+    </resultMap>
+    
+    <select id="queryUser" parameterClass="com.yxqm.console.system.bean.UserBean" resultMap="userMap">
+        select
+		u_user_id,
+		u_user_name,
+		u_login_name,
+		u_login_pwd,
+		u_mobile,
+		u_status,
+		crt_date,
+		mod_date,
+		u_remark,
+		u_user_code,
+		ext_sys_id,
+		ext_sys_object_id,
+		ext_sys_object_value,
+		is_auth,
+		secret_key
+		from t_sys_user
+		where 1=1
+		<isNotEmpty property="loginName" prepend="and">
+			u_login_name = #loginName#
+		</isNotEmpty>
+		<isNotEmpty property="loginPwd" prepend="and">
+			u_login_pwd = #loginPwd#
+		</isNotEmpty>
+    </select>
+    
+    <select id="queryRoleByUser" parameterClass="com.yxqm.console.system.bean.UserBean" resultMap="roleMap">
+        select 
+           b.role_id,
+           b.role_name,
+           b.role_code,
+           b.role_desc
+         from t_sys_user_role_ref a inner join t_sys_role b on a.role_code = b.role_code where user_code = #userCode#
+    </select>
+    
+    <select id="queryRole" parameterClass="com.yxqm.console.system.bean.RoleBean" resultMap="roleMap">
+       select 
+          role_id,
+          role_name,
+          role_code,
+          role_desc
+        from t_sys_role
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="roleName">
+				role_name   LIKE '%$roleName$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="roleId">
+				role_id = #roleId#
+			</isNotEmpty>
+		</dynamic>
+    </select>
+    
+    <!-- <select id="queryForumAdminRows" parameterClass="com.yxqm.console.forum.bean.ForumUserBean" resultClass="java.lang.Integer">
+       select count(ref_id) from t_sys_user_role_ref a inner join t_sys_role b on a.role_code = b.role_code 
+                                                              and b.role_name='圈子管理员'
+                                                       inner join t_sys_user u on a.user_code = u.u_user_code
+                                                              and u.u_status=0
+                                                       where 1=1
+    <isNotEmpty property="u_user_name" prepend="and">
+		u_user_name LIKE '%$u_user_name$%'
+	</isNotEmpty>
+	<isNotEmpty property="u_login_name" prepend="and">
+		u_login_name LIKE '%$u_login_name$%'
+	</isNotEmpty>
+	<isNotEmpty property="u_user_id" prepend="and">
+		u_user_id = #u_user_id#
+	</isNotEmpty>
+	<isNotEmpty property="u_mobile" prepend="and">
+		u_mobile = #u_mobile#
+	</isNotEmpty>
+    </select>
+    
+    <select id="queryForumAdminList" parameterClass="com.yxqm.console.forum.bean.ForumUserBean" resultClass="java.util.HashMap">
+       select 
+          u_user_id,
+          u_user_name,
+          u_login_name,
+          u_mobile,
+          u_user_code,
+          b.role_code
+       from t_sys_user_role_ref a inner join t_sys_role b on a.role_code = b.role_code
+                                                and b.role_name='圈子管理员'
+                                  inner join t_sys_user u on a.user_code = u.u_user_code
+                                                and u.u_status=0
+                                  where 1=1              
+    <isNotEmpty property="u_user_name" prepend="and">
+		u_user_name LIKE '%$u_user_name$%'
+	</isNotEmpty>
+	<isNotEmpty property="u_login_name" prepend="and">
+		u_login_name LIKE '%$u_login_name$%'
+	</isNotEmpty>
+	<isNotEmpty property="u_user_id" prepend="and">
+		u_user_id = #u_user_id#
+	</isNotEmpty>
+	<isNotEmpty property="u_mobile" prepend="and">
+		u_mobile = #u_mobile#
+	</isNotEmpty>
+	LIMIT #beginPage#,#endPage#;
+    </select>
+    
+    <delete id="deleteAdminUser" parameterClass="com.yxqm.console.forum.bean.ForumUserBean">
+	    delete from t_sys_user where u_user_id = #u_user_id#
+	</delete>
+	
+	<delete id="deleteAdminUserRole" parameterClass="com.yxqm.console.forum.bean.ForumUserBean">
+	    delete from t_sys_user_role_ref where user_code = #u_user_code# and role_code = #role_code#
+	</delete> -->
+	
+	<select id="queryRoleRows" parameterClass="com.yxqm.console.system.bean.RoleBean" resultClass="java.lang.Integer">
+	    select count(role_id) from t_sys_role 
+	     where 1=1
+        <isNotEmpty prepend="and" property="roleName">
+            role_name  LIKE '%$roleName$%'
+        </isNotEmpty>
+	</select>
+	
+	<insert id="addRole" parameterClass="com.yxqm.console.system.bean.RoleBean">
+	    insert into t_sys_role(
+	        <isNotEmpty property="roleName">
+				role_name
+	        </isNotEmpty>
+	        <isNotEmpty prepend="," property="roleCode">
+				role_code
+	        </isNotEmpty>
+          	<isNotEmpty prepend="," property="roleDesc">
+             	role_desc
+          	</isNotEmpty>
+	    )values(
+	        <isNotEmpty property="roleName">
+	        #roleName#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="," property="roleCode">
+	        #roleCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="," property="roleDesc">
+	        #roleDesc#
+	        </isNotEmpty>
+	    )
+	    
+	  <selectKey resultClass="java.lang.String" keyProperty="roleId">    
+             SELECT LAST_INSERT_ID() AS role_id  
+      </selectKey>
+	</insert>
+	
+	<update id="updateRole" parameterClass="com.yxqm.console.system.bean.RoleBean">
+	    update t_sys_role 
+	          set role_id = role_id
+	          <isNotEmpty prepend="," property="roleName">
+	             role_name = #roleName#
+	          </isNotEmpty>
+	          
+	          <isNotEmpty prepend="," property="roleCode">
+	             role_code = #roleCode#
+	          </isNotEmpty>
+	          
+	          <isNotEmpty prepend="," property="roleDesc">
+	             role_desc = #roleDesc#
+	          </isNotEmpty>
+	    where role_id = #roleId#
+	</update>
+	
+	<delete id="deleteRole" parameterClass="com.yxqm.console.system.bean.RoleBean">
+	    delete from t_sys_role where role_id = #roleId#
+	</delete>
+	
+	<delete id="deleteRolePrivilegeRef" parameterClass="com.yxqm.console.system.bean.RoleBean">
+	    delete from t_sys_role_privilege_ref where role_code = #roleCode#
+	</delete>
+	
+	<select id="listPrivilege" parameterClass="com.yxqm.console.system.bean.PrivilegeBean" resultMap="privilegeBeanMap">
+	    select
+		privilege_id,
+		privilege_name,
+		privilege_code,
+		privilege_desc
+		from t_sys_privilege
+		where 1 = 1
+		<isNotEmpty prepend="and" property="privilege_code">
+			privilege_code != #privilege_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="privilege_name">
+			privilege_name LIKE '%$privilege_name$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="privilege_id">
+			privilege_id = #privilege_id#
+		</isNotEmpty>
+		<isNotEqual property="endPage" compareValue="0">
+			<isGreaterEqual property="beginPage" compareValue="0">
+				LIMIT #beginPage#,#endPage#;
+			</isGreaterEqual>
+		</isNotEqual>
+	</select>
+	
+	<select id="listRows" parameterClass="com.yxqm.console.system.bean.PrivilegeBean" resultClass="java.lang.Integer">
+	    select
+		count(privilege_id)
+		from t_sys_privilege
+		where 1=1
+		<isNotEmpty prepend="and" property="privilege_code">
+			privilege_code != #privilege_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="privilege_name">
+			privilege_name LIKE '%$privilege_name$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="privilege_id">
+			privilege_id = #privilege_id#
+		</isNotEmpty>
+	</select>
+	
+	<insert id="addPrivilege" parameterClass="com.yxqm.console.system.bean.PrivilegeBean">
+	    insert into t_sys_privilege(
+		privilege_name,
+		privilege_code,
+		crt_date,
+		mod_date
+		<isNotEmpty prepend="," property="privilege_desc">
+			privilege_desc
+		</isNotEmpty>
+		)values(
+		#privilege_name#,
+		#privilege_code#,
+		sysdate(),
+		sysdate()
+		<isNotEmpty prepend="," property="privilege_desc">
+			#privilege_desc#
+		</isNotEmpty>
+		)
+
+		<selectKey resultClass="java.lang.String" keyProperty="privilege_id">
+			SELECT LAST_INSERT_ID() AS privilege_id
+		</selectKey>
+	</insert>
+	
+	<delete id="delPrivilege" parameterClass="com.yxqm.console.system.bean.PrivilegeBean">
+	    delete from t_sys_privilege 
+	    where 
+	     privilege_code = #privilege_code#
+	</delete>
+	
+	<update id="updatePrivilege" parameterClass="com.yxqm.console.system.bean.PrivilegeBean">
+	    update t_sys_privilege 
+	        set privilege_id = privilege_id,
+	        mod_date = sysdate()
+	        <isNotEmpty prepend="," property="privilege_name">
+	            privilege_name = #privilege_name#
+	        </isNotEmpty>
+	        
+	        <isNotEmpty prepend="," property="privilege_desc">
+	            privilege_desc = #privilege_desc#
+	        </isNotEmpty>
+	    where privilege_id = #privilege_id#
+	</update>
+	
+	<select id="queryUserRows" parameterClass="com.yxqm.console.system.bean.UserBean" resultClass="java.lang.Integer">
+		SELECT COUNT(u_user_id) FROM t_sys_user
+		WHERE u_login_name != 'admin'
+	   	<isNotEmpty property="u_user_name" prepend="and">
+		u_user_name LIKE '%$u_user_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="u_login_name" prepend="and">
+		u_login_name LIKE '%$u_login_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="u_user_id" prepend="and">
+		u_user_id = #u_user_id#
+		</isNotEmpty>
+		<isNotEmpty property="u_mobile" prepend="and">
+		u_mobile = #u_mobile#
+		</isNotEmpty>
+		<isNotEmpty property="u_user_code" prepend="and">
+		u_user_code LIKE '%$u_user_code$%'
+		</isNotEmpty>
+		<isNotEmpty property="u_status" prepend="and">
+		u_status = #u_status#
+		</isNotEmpty>
+    </select>
+
+    <select id="queryUserList" parameterClass="com.yxqm.console.system.bean.UserBean" resultClass="java.util.HashMap">
+		SELECT
+		u_user_id,
+		u_user_name,
+		u_login_name,
+		u_status,
+		DATE_FORMAT(crt_date,'%Y-%m-%d %H:%i:%s') as crt_date,
+		DATE_FORMAT(mod_date,'%Y-%m-%d %H:%i:%s') as mod_date,
+		u_user_code,
+		u_mobile,
+		u_remark
+		FROM t_sys_user
+		WHERE u_login_name != 'admin'
+		<isNotEmpty property="u_user_name" prepend="and">
+			u_user_name LIKE '%$u_user_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="u_login_name" prepend="and">
+			u_login_name LIKE '%$u_login_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="u_user_id" prepend="and">
+			u_user_id = #u_user_id#
+		</isNotEmpty>
+		<isNotEmpty property="u_mobile" prepend="and">
+			u_mobile = #u_mobile#
+		</isNotEmpty>
+		<isNotEmpty property="u_user_code" prepend="and">
+			u_user_code LIKE '%$u_user_code$%'
+		</isNotEmpty>
+		<isNotEmpty property="u_status" prepend="and">
+			u_status = #u_status#
+		</isNotEmpty>
+		LIMIT #beginPage#,#endPage#;
+    </select>
+    
+    <insert id="insertUserProfileHistory" parameterClass="com.yxqm.console.system.bean.UserBean">
+		INSERT INTO t_sys_user_profile_history(
+		user_id,
+		change_item,
+		odd_value,
+		new_value,
+		add_time
+		)VALUES(
+		#u_user_id#,
+		'password',
+		#loginPwd#,
+		#u_login_pwd#,
+		sysdate()
+		)
+	</insert>
+    
+    <insert id="addUser" parameterClass="com.yxqm.console.system.bean.UserBean">
+	    INSERT INTO t_sys_user(
+		crt_date,
+		mod_date
+		<isNotEmpty property="u_user_name" prepend=",">
+			u_user_name
+		</isNotEmpty>
+		<isNotEmpty property="u_login_name" prepend=",">
+			u_login_name
+		</isNotEmpty>
+		<isNotEmpty property="u_login_pwd" prepend=",">
+			u_login_pwd
+		</isNotEmpty>
+		<isNotEmpty property="u_status" prepend=",">
+			u_status
+		</isNotEmpty>
+		<isNotEmpty property="u_remark" prepend=",">
+			u_remark
+		</isNotEmpty>
+		<isNotEmpty property="u_user_code" prepend=",">
+			u_user_code
+		</isNotEmpty>
+		<isNotEmpty property="u_mobile" prepend=",">
+			u_mobile
+		</isNotEmpty>
+		<isNotEmpty property="ext_sys_id" prepend=",">
+			ext_sys_id
+		</isNotEmpty>
+		<isNotEmpty property="ext_sys_object_id" prepend=",">
+			ext_sys_object_id
+		</isNotEmpty>
+		<isNotEmpty property="ext_sys_object_value" prepend=",">
+			ext_sys_object_value
+		</isNotEmpty>
+		)VALUES(
+		sysdate(),
+		sysdate()
+		<isNotEmpty property="u_user_name" prepend=",">
+			#u_user_name#
+		</isNotEmpty>
+		<isNotEmpty property="u_login_name" prepend=",">
+			#u_login_name#
+		</isNotEmpty>
+		<isNotEmpty property="u_login_pwd" prepend=",">
+			#u_login_pwd#
+		</isNotEmpty>
+		<isNotEmpty property="u_status" prepend=",">
+			#u_status#
+		</isNotEmpty>
+		<isNotEmpty property="u_remark" prepend=",">
+			#u_remark#
+		</isNotEmpty>
+		<isNotEmpty property="u_user_code" prepend=",">
+			#u_user_code#
+		</isNotEmpty>
+		<isNotEmpty property="u_mobile" prepend=",">
+			#u_mobile#
+		</isNotEmpty>
+		<isNotEmpty property="ext_sys_id" prepend=",">
+			#ext_sys_id#
+		</isNotEmpty>
+		<isNotEmpty property="ext_sys_object_id" prepend=",">
+			#ext_sys_object_id#
+		</isNotEmpty>
+		<isNotEmpty property="ext_sys_object_value" prepend=",">
+			#ext_sys_object_value#
+		</isNotEmpty>
+		)
+		<selectKey resultClass="java.lang.String" keyProperty="u_user_id">
+			SELECT LAST_INSERT_ID() AS u_user_id
+		</selectKey>
+	</insert>
+	
+	<select id="queryUserById" parameterClass="java.lang.String" resultClass="com.yxqm.console.system.bean.UserBean">
+	    SELECT
+			u_user_id,
+			u_user_name,
+			u_login_name,
+			u_status,
+			DATE_FORMAT(crt_date,'%Y-%m-%d %H:%i:%s') as crt_date,
+			DATE_FORMAT(mod_date,'%Y-%m-%d %H:%i:%s') as mod_date,
+			u_user_code,
+			u_mobile,
+			u_remark,
+			ext_sys_id,
+			ext_sys_object_id,
+			ext_sys_object_value,
+			is_auth
+		FROM t_sys_user
+		WHERE u_user_id = #u_user_id#
+	</select>
+	
+	<update id="updateUser" parameterClass="com.yxqm.console.system.bean.UserBean">
+	    UPDATE t_sys_user SET u_user_id = u_user_id,mod_date = sysdate()
+		<isNotEmpty prepend="," property="u_user_name">
+			u_user_name = #u_user_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="u_login_name">
+			u_login_name = #u_login_name#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="u_login_pwd">
+			u_login_pwd = #u_login_pwd#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="u_status">
+			u_status = #u_status#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="crt_date">
+			crt_date = #crt_date#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="mod_date">
+			mod_date = #mod_date#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="u_user_code">
+			u_user_code = #u_user_code#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="u_mobile">
+			u_mobile = #u_mobile#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="u_remark">
+			u_remark = #u_remark#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="ext_sys_id">
+			ext_sys_id = #ext_sys_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="ext_sys_object_id">
+			ext_sys_object_id = #ext_sys_object_id#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="ext_sys_object_value">
+			<isNotEqual property="ext_sys_object_value" compareValue="0">
+				ext_sys_object_value = #ext_sys_object_value#
+			</isNotEqual>
+			<isEqual property="ext_sys_object_value" compareValue="0">
+				ext_sys_object_value = null
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="secret_key">
+			secret_key = #secret_key#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="is_auth">
+			is_auth = #is_auth#
+		</isNotEmpty>
+		WHERE u_user_id = #u_user_id#
+	</update>
+	
+	<delete id="deleteSysUser" parameterClass="com.yxqm.console.system.bean.UserBean">
+	    delete from t_sys_user where u_user_id = #u_user_id#
+	</delete>
+	
+	<delete id="deleteSysUserRole" parameterClass="com.yxqm.console.system.bean.UserBean">
+	    delete from t_sys_user_role_ref where user_code = #u_user_code#
+	</delete>
+	
+	<select id="queryUserDataChecked" parameterClass="com.yxqm.console.system.bean.UserBean" resultClass="java.lang.Integer">
+		SELECT COUNT(u_user_id) FROM t_sys_user 
+		WHERE 1=1
+		<isNotEmpty property="u_user_code" prepend="and">
+		u_user_code = #u_user_code#
+		</isNotEmpty>
+		<isNotEmpty property="u_login_name" prepend="and">
+		u_login_name = #u_login_name#
+		</isNotEmpty>
+    </select>
+    
+    <select id="queryPrivilegeResourcesRef" parameterClass="com.yxqm.console.system.bean.PrivilegeResourceRefBean" resultMap="privilegeResourceRefBeanMap">
+        select 
+           a.ref_id,
+           a.privilege_code,
+           a.resource_code,
+           b.resource_name
+        from t_privilege_resource_ref a inner join t_sys_resources b on a.resource_code = b.resource_code
+        where 1=1
+        <isNotEmpty prepend="and" property="privilege_code">
+        a.privilege_code = #privilege_code#
+        </isNotEmpty>
+         <isNotEmpty prepend="and" property="resource_code">
+        a.resource_code = #resource_code#
+        </isNotEmpty>
+    </select>
+    
+    <select id="queryPrivilegeByUserRole" parameterClass="com.yxqm.console.system.bean.UserBean" resultMap="rolePrivilegeRefBeanMap">
+        select
+           a.ref_id,
+           a.role_code,
+           a.privilege_code
+        from t_sys_role_privilege_ref a inner join t_sys_user_role_ref b on a.role_code = b.role_code
+        where 1=1 
+           and b.user_code=#userCode#
+    </select>
+    
+    <insert id="addPrivilegeResource" parameterClass="java.util.HashMap">
+       insert into t_privilege_resource_ref(
+          privilege_code,
+          resource_code
+       )values(
+          #privilege_code#,
+          #resource_code#
+       )
+    
+    </insert>
+    
+    <delete id="delPrivilegeRoleRef" parameterClass="java.lang.String">
+       delete from t_sys_role_privilege_ref 
+       where privilege_code = #privilege_code#
+    </delete>
+    
+    <delete id="delPrivilegeResourceRef" parameterClass="java.lang.String">
+       delete from t_privilege_resource_ref
+       where privilege_code = #privilege_code#
+    </delete>
+    
+    <delete id="deleteUserRole" parameterClass="com.yxqm.console.system.bean.UserRoleRefBean">
+	    delete from t_sys_user_role_ref where user_code = #user_code#
+	</delete>
+	
+    <insert id="addUserRole" parameterClass="com.yxqm.console.system.bean.UserRoleRefBean">
+	    INSERT INTO t_sys_user_role_ref(
+	       <isNotEmpty property="user_code">
+	           user_code
+	       </isNotEmpty>
+	       <isNotEmpty property="role_code" prepend=",">
+	           role_code
+	       </isNotEmpty>
+	    )VALUES(
+	       <isNotEmpty property="user_code">
+	           #user_code#
+	       </isNotEmpty>
+	       <isNotEmpty property="role_code" prepend=",">
+	           #role_code#
+	       </isNotEmpty>
+	    )
+		<selectKey resultClass="java.lang.String" keyProperty="ref_id">    
+			SELECT LAST_INSERT_ID() AS ref_id
+		</selectKey>
+	</insert>
+	
+	<select id="queryPrivilegeByRole" parameterClass="com.yxqm.console.system.bean.RoleBean" resultMap="privilegeBeanMap">
+        select 
+           b.privilege_id,
+           b.privilege_name,
+           b.privilege_code,
+           b.privilege_desc
+         from t_sys_role_privilege_ref a inner join t_sys_privilege b on a.privilege_code = b.privilege_code 
+         where role_code = #roleCode#
+    </select>
+    
+    <delete id="deleteRolePrivilege" parameterClass="com.yxqm.console.system.bean.RolePrivilegeRefBean">
+	    delete from t_sys_role_privilege_ref where role_code = #role_code#
+	</delete>
+	
+	<insert id="assignPrivilege" parameterClass="com.yxqm.console.system.bean.RolePrivilegeRefBean">
+	    INSERT INTO t_sys_role_privilege_ref(
+	       <isNotEmpty property="role_code">
+	           role_code
+	       </isNotEmpty>
+	       <isNotEmpty property="privilege_code" prepend=",">
+	           privilege_code
+	       </isNotEmpty>
+	    )VALUES(
+	       <isNotEmpty property="role_code">
+	           #role_code#
+	       </isNotEmpty>
+	       <isNotEmpty property="privilege_code" prepend=",">
+	           #privilege_code#
+	       </isNotEmpty>
+	    )
+		<selectKey resultClass="java.lang.String" keyProperty="ref_id">    
+			SELECT LAST_INSERT_ID() AS ref_id
+		</selectKey>
+	</insert>
+	
+	<select id="roleDataChecked" parameterClass="com.yxqm.console.system.bean.RoleBean" resultClass="java.lang.Integer">
+		SELECT COUNT(role_id) FROM t_sys_role 
+		WHERE 1=1
+		<isNotEmpty property="roleCode" prepend="and">
+		role_code = #roleCode#
+		</isNotEmpty>
+    </select>
+    
+    <select id="privilegeDataChecked" parameterClass="com.yxqm.console.system.bean.PrivilegeBean" resultClass="java.lang.Integer">
+		SELECT COUNT(privilege_id) FROM t_sys_privilege 
+		WHERE 1=1
+		<isNotEmpty property="privilege_code" prepend="and">
+		privilege_code = #privilege_code#
+		</isNotEmpty>
+    </select>
+    
+    <select id="queryInsertUserProfileHistory" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT odd_value FROM t_sys_user_profile_history WHERE user_id = #u_user_id#
+	</select>
+
+	<select id="queryUserProfileHistoryList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		select * from ( select * from t_sys_user_profile_history ORDER BY ADD_TIME  desc)c
+		WHERE user_id = #u_user_id# group by user_id;
+	</select>
+
+	<update id="updateUserProfile" parameterClass="java.util.HashMap">
+		update t_sys_user set
+		u_status = '1'
+		where u_user_id = #u_user_id#
+	</update>
+
+	<select id="queryUserIdList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT
+		u_user_id,
+		u_user_name,
+		u_login_name,
+		is_internal,
+		mail_box
+		FROM t_sys_user
+	</select>
+</sqlMap>

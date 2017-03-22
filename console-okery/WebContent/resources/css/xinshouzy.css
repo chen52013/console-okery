@@ -1,0 +1,49 @@
+﻿@charset "utf-8";
+/* CSS Document */
+body{margin:0;padding:0;font-size:20px; font-family:"微软雅黑";}
+h1,h2,h3,h4,h5,p,ul,li,dl,dd,dt,img,input{margin:0;padding:0;border:0;list-style:none;}
+a:link,a:visited{text-decoration:none;color:#666;}
+a:hover{text-decoration:underline;}
+/*product*/
+/*top*/
+#topWrap{width:100%;height:85px;margin:0 auto; border-bottom:1px solid #eee;}
+.top{width:1240px;height:85px;margin:0 auto;}
+.logo{float:left;}
+.nav{width:830px;height:85px;line-height:85px;float:right;}
+.nav a{margin-right:50px;}
+#orange{color:#FF7701;margin-right:0px;font-size:18px; background:url(../Images/nav-1.png) no-repeat left center;padding-left:29px;_display:inline;padding-bottom:3px;}
+.nav span{margin:0 1px;color:#7E7E7E;}
+.nav .gray{color:#7E7E7E;margin-right:0px;font-size:18px;}
+
+/*Xcontent*/
+#Xcontent{padding-bottom:80px;}
+#Xcontent .Xtop{height:80px;padding-left:50px; background:#3083eb;width:expression(document.body.clientWidth <= 1240? "1240px": "auto");min-width:1240px;}
+#Xcontent .Xtop p{width:1240px;height:80px;line-height:80px;float:left;font-size:34px;color:#fff;margin-left:10px; }
+#Xcontent .conWrap{width:1230px; margin:0 auto;padding-left:10px;}
+#Xcontent .con{height:160px;;padding:40px 0 100px 0;color:#535353;font-size:28px;}
+.lc1{margin-left:150px;}
+.lc2{margin-left:10px;}
+.conWrap h3{height:70px;line-height:60px;width:1240px;border-bottom:1px solid #b5b5b5;margin-bottom:30px;font-size:26px;color:#535353; font-weight:normal;margin-top:20px;}
+.conWrap h4{height:40px;line-height:40px;font-size:26px;color:#535353; font-weight:normal;}
+.conWrap h5{height:30px;line-height:30px;font-size:22px;color:#535353; font-weight:normal;}
+.conWrap p{font-size:20px;color:#777;margin-bottom:30px;line-height:30px;margin-top:10px;}
+.conWrap .con-img{margin-left:70px;margin-bottom:20px;-webkit-box-shadow:0px 2px 5px rgba(0,0,0,0.5);box-shadow:0px 2px 5px rgba(0,0,0,0.5);}
+.conWrap table{margin-left:70px;}
+
+
+
+
+/*more*/
+#more{height:100px; background:url(../Images/more.png) no-repeat center center; width:expression(document.body.clientWidth <= 1240? "1240px": "auto");min-width:1240px;}
+#more #phone{
+	height: 100px;
+	text-align:center;
+	line-height:100px;
+	font-size: 36px;
+	color: #fdfa03;
+	font-weight: bolder;
+}
+#more #phone span{
+	font-size: 36px;
+	color: white;
+}

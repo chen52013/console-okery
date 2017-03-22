@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0 (2)">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/activation-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/amqp-client-3.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/aspectjrt-1.6.11.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/aspectjweaver-1.6.11.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/c3p0-0.9.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-beanutils-1.9.2.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-codec-1.5.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-io-2.2.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/commons-pool2-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/druid-1.0.5.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/fastjson-1.2.4.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/freemarker-2.3.20.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/hibernate-validator-4.3.0.Final.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/httpclient-4.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/httpcore-4.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/ibatis-2.3.4.726.bugfix.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jackson-core-asl-1.9.4.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jackson-mapper-asl-1.9.4.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/javax.mail-1.5.5.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/javax.mail-api-1.5.6.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/javax.servlet-api-3.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jboss-logging-3.1.0.CR2.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jedis-2.8.0.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jsch-0.1.53.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jsoup-1.8.1.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jsoup-1.8.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/jstl-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/lang-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/log4j-1.2-api-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/log4j-api-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/log4j-core-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/log4j-jcl-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/log4j-jul-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/log4j-slf4j-impl-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/log4j-web-2.3.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/mina-core-1.1.5.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/mongo-java-driver-2.13.2.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/mysql-connector-java-5.1.30.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/netty-all-4.0.25.Final.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/ojdbc6-11.2.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/poi-3.10-FINAL.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/rabbitmq-client-3.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/rocketmq-client-3.2.6.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/rocketmq-common-3.2.6.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/rocketmq-remoting-3.2.6.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/rome-1.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-amqp-1.4.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-aop-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-beans-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-context-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-context-support-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-core-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-data-commons-1.8.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-data-mongodb-1.5.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-data-redis-1.6.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-expression-3.2.14.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-jdbc-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-messaging-4.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-orm-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-oxm-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-rabbit-1.4.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-retry-1.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-security-acl-3.1.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-security-config-3.1.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-security-core-3.1.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-security-remoting-3.1.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-security-taglibs-3.1.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-security-web-3.1.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-test-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-tx-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-web-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/spring-webmvc-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/standard-1.1.2.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/tair-client-2.3.4.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/thumbnailator-0.4.8.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/console-okery/WebContent/WEB-INF/lib/validation-api-1.0.0.GA.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

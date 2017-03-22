@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="inter">
+
+    <select id="queryInterList" parameterClass="com.yxqm.console.web.bean.InterBean" resultClass="hashMap">
+        select 
+	        i.inter_id,
+	        i.inter_status,
+	        i.inter_name,
+	        i.inter_url,
+	        i.inter_desc,
+	        DATE_FORMAT(i.inter_crt_time,'%Y-%m-%d %H:%i:%S') inter_crt_time,
+	        DATE_FORMAT(i.inter_mod_time,'%Y-%m-%d %H:%i:%S') inter_mod_time,
+	        c.channel_name 
+        from t_inter i inner join t_channel c on i.inter_type = c.id
+        <isNotEmpty property="inter_name" prepend="and">
+			i.inter_name LIKE '%$inter_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="inter_url" prepend="and">
+			i.inter_url LIKE '%$inter_url$%'
+		</isNotEmpty>
+		<isNotEmpty property="inter_status" prepend="and">
+			i.inter_status = #inter_status#
+		</isNotEmpty>
+    </select>
+    
+    <select id="queryInterListRows" parameterClass="com.yxqm.console.web.bean.InterBean" resultClass="java.lang.Integer">
+        select 
+	        count(distinct i.inter_id)
+        from t_inter i inner join t_channel c on i.inter_type = c.id
+        <isNotEmpty property="inter_name" prepend="and">
+			i.inter_name LIKE '%$inter_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="inter_url" prepend="and">
+			i.inter_url LIKE '%$inter_url$%'
+		</isNotEmpty>
+		<isNotEmpty property="inter_status" prepend="and">
+			i.inter_status = #inter_status#
+		</isNotEmpty>
+    </select>
+    
+    <insert id="addInter" parameterClass="com.yxqm.console.web.bean.InterBean">
+	    INSERT INTO t_inter(
+	    	inter_status,
+	    	inter_crt_time,
+	    	inter_mod_time
+	       <isNotEmpty property="inter_name" prepend=",">
+	           inter_name
+	       </isNotEmpty>
+	       <isNotEmpty property="inter_type" prepend=",">
+	           inter_type
+	       </isNotEmpty>
+	       <isNotEmpty property="inter_url" prepend=",">
+	           inter_url
+	       </isNotEmpty>
+	       <isNotEmpty property="inter_desc" prepend=",">
+	           inter_desc
+	       </isNotEmpty>
+	    )VALUES(
+	    	10,
+	    	sysdate(),
+	    	sysdate()
+	       <isNotEmpty property="inter_name" prepend=",">
+	           #inter_name#
+	       </isNotEmpty>
+	       <isNotEmpty property="inter_type" prepend=",">
+	           #inter_type#
+	       </isNotEmpty>
+	       <isNotEmpty property="inter_url" prepend=",">
+	           #inter_url#
+	       </isNotEmpty>
+	       <isNotEmpty property="inter_desc" prepend=",">
+	           #inter_desc#
+	       </isNotEmpty>
+	    )
+		<selectKey resultClass="java.lang.String" keyProperty="inter_id">    
+			SELECT LAST_INSERT_ID() AS inter_id
+		</selectKey>
+	</insert>
+	
+	<update id="updateMenu" parameterClass="com.yxqm.console.system.bean.MenuBean">
+	    UPDATE t_sys_menu SET menu_id = menu_id
+		    <isNotEmpty prepend="," property="menu_name">
+		       menu_name = #menu_name#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="menu_url">
+			menu_url = #menu_url#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="menu_index">
+	        menu_index = #menu_index#
+	       </isNotEmpty>
+			<isNotEmpty prepend="," property="parent_id">
+			parent_id = #parent_id#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="menu_level">
+			menu_level = #menu_level#
+			</isNotEmpty>
+	    WHERE menu_id = #menu_id#
+	</update>
+	
+	<delete id="deleteMenu" parameterClass="com.yxqm.console.system.bean.MenuBean">
+	    delete from t_sys_menu where menu_id = #menu_id#
+	</delete>
+	
+</sqlMap>

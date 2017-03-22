@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="resources">
+	<resultMap class="com.yxqm.console.system.bean.ResourceBean" id="resourceMap">
+		<result property="resourceId" column="resource_id" javaType="java.lang.Long" jdbcType="NUMBER" nullValue="0" />
+		<result property="resourceName" column="resource_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="resourceCode" column="resource_code" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="resourceDesc" column="resource_desc" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="resourceUrl" column="resource_url" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+		<result property="resourceType" column="resource_type" javaType="java.lang.Integer" jdbcType="NUMBER" nullValue="0" />
+		<result property="parent_resource" column="parent_resource" javaType="java.lang.String" jdbcType="NUMBER" nullValue="" />
+		<result property="module_name" column="module_name" javaType="java.lang.String" jdbcType="VARCHAR" nullValue="" />
+	</resultMap>
+
+    <select id="queryResourceRows" parameterClass="com.yxqm.console.system.bean.ResourceBean" resultClass="java.lang.Integer">
+		SELECT COUNT(sr.resource_id) FROM t_sys_resources sr
+		where sr.is_enable = 'enable'
+		<isNotEmpty property="resource_name" prepend="and">
+			sr.resource_name LIKE '%$resource_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="resource_url" prepend="and">
+			sr.resource_url LIKE '%$resource_url$%'
+		</isNotEmpty>
+		<isNotEmpty property="resource_desc" prepend="and">
+			sr.resource_desc LIKE '%$resource_desc$%'
+		</isNotEmpty>
+		<isNotEmpty property="resource_type" prepend="and">
+			sr.resource_type = #resource_type#
+		</isNotEmpty>
+		<isNotEmpty property="parent_resource" prepend="and">
+			sr.parent_resource = #parent_resource#
+		</isNotEmpty>
+		<isNotEmpty property="resource_id" prepend="and">
+			sr.resource_id = #resource_id#
+		</isNotEmpty>
+    </select>
+    
+    <select id="queryResourceList" parameterClass="com.yxqm.console.system.bean.ResourceBean" resultClass="java.util.HashMap">
+		SELECT 
+          sr.resource_id,
+          sr.resource_code,
+          sr.resource_desc,
+          sr.resource_url,
+          sr.resource_type,
+		  ifnull(sr.parent_resource, 0) parent_resource,
+		  ifnull(sm.menu_name,sr.resource_name) resource_name
+		from t_sys_resources sr
+		left join t_sys_menu sm on sm.menu_code = sr.menu_code
+		where sr.is_enable = 'enable'
+		<isNotEmpty property="resource_name" prepend="and">
+			sr.resource_name LIKE '%$resource_name$%'
+		</isNotEmpty>
+		<isNotEmpty property="resource_url" prepend="and">
+			sr.resource_url LIKE '%$resource_url$%'
+		</isNotEmpty>
+		<isNotEmpty property="resource_desc" prepend="and">
+			sr.resource_desc LIKE '%$resource_desc$%'
+		</isNotEmpty>
+		<isNotEmpty property="resource_type" prepend="and">
+			sr.resource_type = #resource_type#
+		</isNotEmpty>
+		<isNotEmpty property="parent_resource" prepend="and">
+			sr.parent_resource = #parent_resource#
+		</isNotEmpty>
+		<isNotEmpty property="resource_id" prepend="and">
+			sr.resource_id = #resource_id#
+		</isNotEmpty>
+    </select>
+    
+    <insert id="addResource" parameterClass="com.yxqm.console.system.bean.ResourceBean">
+	    INSERT INTO t_sys_resources(
+	       <isNotEmpty property="resource_name">
+	           resource_name
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_type" prepend=",">
+	           resource_type
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_code" prepend=",">
+	           resource_code
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_desc" prepend=",">
+	           resource_desc
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_url" prepend=",">
+	           resource_url
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_code" prepend=",">
+	           menu_code
+	       </isNotEmpty>
+	       <isNotEmpty property="parent_resource" prepend=",">
+	           parent_resource
+	       </isNotEmpty>
+	    )VALUES(
+	       <isNotEmpty property="resource_name">
+	           #resource_name#
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_type" prepend=",">
+	           #resource_type#
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_code" prepend=",">
+	           #resource_code#
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_desc" prepend=",">
+	           #resource_desc#
+	       </isNotEmpty>
+	       <isNotEmpty property="resource_url" prepend=",">
+	           #resource_url#
+	       </isNotEmpty>
+	       <isNotEmpty property="menu_code" prepend=",">
+	           #menu_code#
+	       </isNotEmpty>
+	       <isNotEmpty property="parent_resource" prepend=",">
+	           #parent_resource#
+	       </isNotEmpty>
+	    )
+		<selectKey resultClass="java.lang.String" keyProperty="resource_id">    
+			SELECT LAST_INSERT_ID() AS resource_id
+		</selectKey>
+	</insert>
+
+	<select id="queryResources" parameterClass="java.util.HashMap" resultMap="resourceMap">
+		select
+		resource_id,
+		resource_code,
+		resource_name,
+		resource_desc,
+		resource_url,
+		resource_type,
+		sr.parent_resource,
+		sm.module_name
+		from t_sys_resources sr left join t_sys_menu sm on sr.menu_code = sm.menu_code
+		<dynamic prepend="where">
+			<isEqual property="is_enable" compareValue="true">
+				sr.is_enable = 'enable'
+			</isEqual>
+		</dynamic>
+	</select>
+
+	<select id="queryResourceById" parameterClass="java.lang.String" resultClass="com.yxqm.console.system.bean.ResourceBean">
+	    SELECT 
+          resource_id,
+          resource_name,
+          resource_code,
+          resource_desc,
+          resource_url,
+          resource_type,
+          ifnull(parent_resource, 0) parent_resource
+		FROM t_sys_resources
+		WHERE resource_id = #resource_id#
+		and is_enable = 'enable'
+	</select>
+	
+	<update id="updateResource" parameterClass="com.yxqm.console.system.bean.ResourceBean">
+	    UPDATE t_sys_resources SET resource_id = resource_id
+		    <isNotEmpty prepend="," property="resource_name">
+		       resource_name = #resource_name#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="," property="resource_code">
+			resource_code = #resource_code#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="resource_desc">
+	        resource_desc = #resource_desc#
+	       </isNotEmpty>
+			<isNotEmpty prepend="," property="resource_url">
+			resource_url = #resource_url#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="resource_type">
+			resource_type = #resource_type#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="parent_resource">
+				parent_resource = #parent_resource#
+			</isNotEmpty>
+	    WHERE resource_id = #resource_id#
+	</update>
+	
+	<delete id="deleteResource" parameterClass="com.yxqm.console.system.bean.ResourceBean">
+	    delete from t_sys_resources where resource_id = #resource_id#
+	</delete>
+	
+	<delete id="deletePrivilegeResourceRef" parameterClass="com.yxqm.console.system.bean.ResourceBean">
+	    delete from t_privilege_resource_ref where resource_code = #resource_code#
+	</delete>
+	
+	<select id="queryResourceDataChecked" parameterClass="com.yxqm.console.system.bean.ResourceBean" resultClass="java.lang.Integer">
+		SELECT COUNT(resource_id) FROM t_sys_resources
+		where is_enable = 'enable'
+		<isNotEmpty property="resource_code" prepend="and">
+		resource_code = #resource_code#
+		</isNotEmpty>
+		<isNotEmpty property="resource_url" prepend="and">
+		resource_url = #resource_url#
+		</isNotEmpty>
+    </select>
+    
+    <select id="queryResourceListByPrivilegeCode" parameterClass="HashMap" resultClass="HashMap">
+		SELECT sr.resource_id, sr.resource_code, ifnull(sr.parent_resource, 0) parent_resource,
+			ifnull(sm.menu_name, sr.resource_name) resource_name,
+		<isNotEmpty property="privilege_code">
+				IF(pr.ref_id IS NULL, 'false', 'true') checked
+		</isNotEmpty>
+		<isEmpty property="privilege_code">
+			'false' checked
+		</isEmpty>
+		FROM t_sys_resources sr
+		left join t_sys_menu sm on sr.menu_code = sm.menu_code
+		<isNotEmpty property="privilege_code">
+			LEFT JOIN t_privilege_resource_ref pr
+			ON sr.resource_code = pr.resource_code
+			AND pr.privilege_code = #privilege_code#
+		</isNotEmpty>
+		where sr.is_enable = 'enable'
+	</select>
+
+	<select id="queryResourceUrlList" parameterClass="HashMap" resultClass="HashMap">
+		SELECT pr.privilege_code, resource_code
+		FROM t_privilege_resource_ref pr
+		WHERE pr.resource_code = (
+		SELECT sr.resource_code FROM t_sys_resources sr WHERE sr.resource_id IN (
+		SELECT sr.parent_resource FROM t_sys_resources sr WHERE sr.resource_url = #resource_url# )
+		)
+	</select>
+	
+	<insert id="insertResource" parameterClass="java.util.HashMap">
+		INSERT INTO t_privilege_resource_ref(
+			privilege_code,resource_code
+		)VALUES(
+			#privilege_code#,
+			#resource_code#
+		)
+	</insert>
+</sqlMap>

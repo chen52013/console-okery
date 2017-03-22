@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="console-okery:war exploded">
+    <output-path>$PROJECT_DIR$/classes/artifacts/console_okery_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="console-okery/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="console-okery" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

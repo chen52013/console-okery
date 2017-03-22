@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="match">
+
+    <select id="queryNBAList" parameterClass="com.yxqm.console.web.bean.NBABean" resultClass="hashMap">
+        select 
+			s.*
+		from t_standings s
+    </select>
+    
+    <select id="queryNBAListRows" parameterClass="com.yxqm.console.web.bean.NBABean" resultClass="java.lang.Integer">
+        select 
+	        count(distinct s.id)
+        from t_standings s 
+    </select>
+	
+	<insert id="addNBA" parameterClass="com.yxqm.console.web.bean.NBABean">
+	    INSERT INTO t_standings(
+	     	update_time
+	       <isNotEmpty property="photo" prepend=",">
+	           photo
+	       </isNotEmpty>
+	       <isNotEmpty property="east_west" prepend=",">
+	           east_west
+	       </isNotEmpty>
+	       <isNotEmpty property="count" prepend=",">
+	           count
+	       </isNotEmpty>
+	       <isNotEmpty property="team_name" prepend=",">
+	           team_name
+	       </isNotEmpty>
+	       <isNotEmpty property="win_count" prepend=",">
+	           win_count
+	       </isNotEmpty>
+	       <isNotEmpty property="lose_count" prepend=",">
+	           lose_count
+	       </isNotEmpty>
+	       <isNotEmpty property="win_persent" prepend=",">
+	           win_persent
+	       </isNotEmpty>
+	       <isNotEmpty property="win_lose_count" prepend=",">
+	           win_lose_count
+	       </isNotEmpty>
+	       <isNotEmpty property="standings" prepend=",">
+	           standings
+	       </isNotEmpty>
+	       <isNotEmpty property="fenqu" prepend=",">
+	           fenqu
+	       </isNotEmpty>
+	       <isNotEmpty property="home" prepend=",">
+	           home
+	       </isNotEmpty>
+	       <isNotEmpty property="away" prepend=",">
+	           away
+	       </isNotEmpty>
+	       <isNotEmpty property="first10" prepend=",">
+	           first10
+	       </isNotEmpty>
+	       <isNotEmpty property="double_win" prepend=",">
+	           double_win
+	       </isNotEmpty>
+	       <isNotEmpty property="win_point" prepend=",">
+	           win_point
+	       </isNotEmpty>
+	       <isNotEmpty property="win_point_count" prepend=",">
+	           win_point_count
+	       </isNotEmpty>
+	       <isNotEmpty property="lose_point_count" prepend=",">
+	           lose_point_count
+	       </isNotEmpty>
+	       <isNotEmpty property="lose_point" prepend=",">
+	           lose_point
+	       </isNotEmpty>
+	       <isNotEmpty property="recound" prepend=",">
+	           recound
+	       </isNotEmpty>
+	       <isNotEmpty property="rebound_count" prepend=",">
+	           rebound_count
+	       </isNotEmpty>
+	       <isNotEmpty property="steal" prepend=",">
+	           steal
+	       </isNotEmpty>
+	       <isNotEmpty property="steal_count" prepend=",">
+	           steal_count
+	       </isNotEmpty>
+	       <isNotEmpty property="assiste" prepend=",">
+	           assiste
+	       </isNotEmpty>
+	       <isNotEmpty property="assiste_count" prepend=",">
+	           assiste_count
+	       </isNotEmpty>
+	       <isNotEmpty property="turnover" prepend=",">
+	           turnover
+	       </isNotEmpty>
+	       <isNotEmpty property="turnover_count" prepend=",">
+	           turnover_count
+	       </isNotEmpty>
+	    )VALUES(
+	    	sysdate()
+	       <isNotEmpty property="photo" prepend=",">
+	           #photo#
+	       </isNotEmpty>
+	       <isNotEmpty property="east_west" prepend=",">
+	           #east_west#
+	       </isNotEmpty>
+	       <isNotEmpty property="count" prepend=",">
+	           #count#
+	       </isNotEmpty>
+	       <isNotEmpty property="team_name" prepend=",">
+	           #team_name#
+	       </isNotEmpty>
+	       <isNotEmpty property="win_count" prepend=",">
+	           #win_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="lose_count" prepend=",">
+	           #lose_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="win_persent" prepend=",">
+	           #win_persent#
+	       </isNotEmpty>
+	       <isNotEmpty property="win_lose_count" prepend=",">
+	           #win_lose_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="standings" prepend=",">
+	           #standings#
+	       </isNotEmpty>
+	       <isNotEmpty property="fenqu" prepend=",">
+	           #fenqu#
+	       </isNotEmpty>
+	       <isNotEmpty property="home" prepend=",">
+	           #home#
+	       </isNotEmpty>
+	       <isNotEmpty property="away" prepend=",">
+	           #away#
+	       </isNotEmpty>
+	       <isNotEmpty property="first10" prepend=",">
+	           #first10#
+	       </isNotEmpty>
+	       <isNotEmpty property="double_win" prepend=",">
+	           #double_win#
+	       </isNotEmpty>
+	       <isNotEmpty property="win_point" prepend=",">
+	           #win_point#
+	       </isNotEmpty>
+	       <isNotEmpty property="win_point_count" prepend=",">
+	           #win_point_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="lose_point_count" prepend=",">
+	           #lose_point_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="lose_point" prepend=",">
+	           #lose_point#
+	       </isNotEmpty>
+	       <isNotEmpty property="recound" prepend=",">
+	           #recound#
+	       </isNotEmpty>
+	       <isNotEmpty property="rebound_count" prepend=",">
+	           #rebound_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="steal" prepend=",">
+	           #steal#
+	       </isNotEmpty>
+	       <isNotEmpty property="steal_count" prepend=",">
+	           #steal_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="assiste" prepend=",">
+	           #assiste#
+	       </isNotEmpty>
+	       <isNotEmpty property="assiste_count" prepend=",">
+	           #assiste_count#
+	       </isNotEmpty>
+	       <isNotEmpty property="turnover" prepend=",">
+	           #turnover#
+	       </isNotEmpty>
+	       <isNotEmpty property="turnover_count" prepend=",">
+	           #turnover_count#
+	       </isNotEmpty>
+	    )
+		<selectKey resultClass="java.lang.String" keyProperty="id">    
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+	</insert>
+</sqlMap>

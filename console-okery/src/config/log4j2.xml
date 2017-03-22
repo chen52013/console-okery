@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="60">
+	<Properties>
+		<Property name="app_id">${env:USER}</Property> 		
+		<Property name="log_path">logs</Property>
+		<Property name="pattern">%d{yyyy-MM-dd HH:mm:ss,SSS}|%-5level|%t|%c{5.}.%M:%L|%replace{%msg}{\s+}{ }%n</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${pattern}" />
+		</Console>
+		<RollingFile name="info" fileName="${log_path}/info-${app_id}.log"
+			filePattern="${log_path}/$${date:yyyy-MM-dd}/info-${app_id}-%d{yyyy-MM-dd-HH}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>${pattern}</Pattern>
+			</PatternLayout>
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="2GB"/>
+			</Policies>
+		</RollingFile>
+		
+		<RollingFile name="error" fileName="${log_path}/error-${app_id}.log"
+			filePattern="${log_path}/$${date:yyyy-MM-dd}/error-${app_id}-%d{yyyy-MM-dd-HH}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>${pattern}</Pattern>
+			</PatternLayout>
+			<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="2GB"/>
+			</Policies>
+		</RollingFile>
+		
+		<RollingFile name="debug" fileName="${log_path}/debug-${app_id}.log"
+			filePattern="${log_path}/$${date:yyyy-MM-dd}/debug-${app_id}-%d{yyyy-MM-dd-HH}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>${pattern}</Pattern>
+			</PatternLayout>
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="2GB"/>
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="sql" fileName="${log_path}/sql_${app_id}.log"
+			filePattern="${log_path}/$${date:yyyy_MM_dd}/sql_${app_id}_%d{yyyy_MM_dd_HH}_%i.log.gz">
+			<PatternLayout>
+				<Pattern>${pattern}</Pattern>
+			</PatternLayout>
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="2GB"/>
+			</Policies>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.yxqm.console" level="debug"/>
+		<Logger name="org.springframework" level="error"/>
+		<logger name="com.alibaba" level="error"/>
+		<logger name="org.hibernate" level="error"/>
+		<logger name="com.taobao.tair" level="error"/>
+		<logger name="com.yxqm.console.web.security" level="error"/>
+		<Logger name="com.yxqm.console.web.action.game.GameUserAction.prize" level="info">
+		   <AppenderRef ref="prize_info" />
+		</Logger>
+
+		<logger name="com.alibaba.rocketmq" level="error"/>
+		<logger name="RocketmqClient" level="error"/>
+		<logger name="org.springframework.orm.ibatis" level="error" additivity="false">
+			<AppenderRef ref="sql"/>
+		</logger>
+		<Logger name="com.yxqm.console.web.security"  level="error"/>
+		<logger name="com.ibatis" level="debug" additivity="false">
+			<AppenderRef ref="sql"/>
+		</logger>
+		<logger name="java.sql" level="debug" additivity="false">
+			<AppenderRef ref="sql"/>
+		</logger>
+
+		<Root level="info">
+			<AppenderRef ref="Console" />
+
+			<AppenderRef ref="error" />
+		</Root>
+	</Loggers>
+</Configuration>
